@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/git@github.com:trevorlomba/gpt-access-client.git/static/css/main.778da051.css",
+    "main.js": "/git@github.com:trevorlomba/gpt-access-client.git/static/js/main.37a60720.js",
+    "static/js/787.28cb0dcd.chunk.js": "/git@github.com:trevorlomba/gpt-access-client.git/static/js/787.28cb0dcd.chunk.js",
+    "index.html": "/git@github.com:trevorlomba/gpt-access-client.git/index.html",
+    "main.778da051.css.map": "/git@github.com:trevorlomba/gpt-access-client.git/static/css/main.778da051.css.map",
+    "main.37a60720.js.map": "/git@github.com:trevorlomba/gpt-access-client.git/static/js/main.37a60720.js.map",
+    "787.28cb0dcd.chunk.js.map": "/git@github.com:trevorlomba/gpt-access-client.git/static/js/787.28cb0dcd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.778da051.css",
+    "static/js/main.37a60720.js"
+  ]
+}
