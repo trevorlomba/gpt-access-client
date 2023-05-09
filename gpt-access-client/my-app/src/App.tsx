@@ -18,7 +18,7 @@ const App: React.FC = () => {
         const formData = new URLSearchParams();
         formData.append("animal", animal + " " + selectedWords.join(" "));
 
-        const response = await axios.post("http://localhost:5000", formData, {
+        const response = await axios.post("https://gpt-access-server.herokuapp.com/generate-response", formData, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
