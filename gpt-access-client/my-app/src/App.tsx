@@ -50,24 +50,24 @@ const App: React.FC = () => {
           <div>
             <p style={{height: ""}}>
               {result.map((item, index) => (
-                <div key={index} style={{marginBottom: "20px", fontWeight:"bold", fontSize: "120%", color: "darkolivegreen"}}>
+                <div key={index} style={{fontWeight:"bold", fontSize: "calc(1vw + 1vh)", color: "darkolivegreen", marginBottom: ".5vh"}}>
                   {item}
-                  <button style={{backgroundColor: "green", color:"white", marginLeft: "10px", paddingLeft: "20px", paddingRight: "20px", fontWeight:"bolder"}} onClick={() => playTTS(item)}>Play</button>
+                  <button style={{backgroundColor: "green", color:"white", marginLeft: "10px", width: "20vw", height:
+                  "4vh", justifyContent: "center", fontWeight:"bolder"}} onClick={() => playTTS(item)}>Play</button>
                 </div>
               ))}
             </p>
           </div>
         )}
         <div>
-      <form onSubmit={handleSubmit} style={{ flex: .2, overflow: 'auto' }}>
-        <label htmlFor="animal"></label>
-        {selectedWords.length > 0 &&  <button style={{backgroundColor: "green", color:"white", marginLeft: "10px", paddingLeft: "20px", paddingRight: "20px", fontWeight:"bolder"}}onClick={() => playTTS(selectedWords.toString())}>Play</button>}
-      </form></div>
+     </div>
       </div>
       <div style={{ flex: 2, overflow: 'auto' }}>
         {<WordCloud 
           selectedWords = {selectedWords}
           setSelectedWords = {setSelectedWords}
+          handleSubmit = {handleSubmit}
+          playTTS = {playTTS}
         />}
       </div>
     </div>
