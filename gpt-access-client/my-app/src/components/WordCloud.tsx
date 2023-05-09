@@ -62,22 +62,19 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords }
   const numbers = "12345676890".split("");
 
   return (
-    <div>
-      <div style={{minHeight: "100px", maxHeight: "100px"}}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ flex: .9, overflow: 'auto', height: "110%"}}>
         {selectedWords.map((val, i) => (
-          <button key={i} value={val} onClick={() => handleAddWord(val)}style={{fontSize: "20px",
-          margin: "5px",
-          marginBottom: "20px"}}>
+          <button key={i} value={val} onClick={() => handleAddWord(val)} style={{fontSize: "110%", margin: "5px", marginBottom: "10px"}}>
             {val}
           </button>
         ))}
         {selectedWords.length > 0 && (
-        <div>
-        <button style = {{backgroundColor: "lightgrey", fontSize:"20px"}} onClick={() => setSelectedWords([])}>Clear Selected Words</button>
-      </div>)}</div>
-
-      <div>
           <div>
+            <button style = {{backgroundColor: "lightgrey", fontSize:"110%"}} onClick={() => setSelectedWords([])}>Clear Selected Words</button>
+          </div>
+        )}
+        <div>
           <button style={{ margin: "1px", padding: "10px", fontSize: "20px", backgroundColor: "firebrick", color: "whitesmoke"}} onClick={() => setSelectedLetters(selectedLetters.slice(0, -1))}>Backspace</button>
           <button style={{ margin: "1px", padding: "10px", fontSize: "20px", backgroundColor: "lightgrey"}} onClick={() => setSelectedLetters([]) }>Clear Selected Letters</button>
           <button style={{ margin: "1px", padding: "10px", fontSize: "20px", backgroundColor: "lightskyblue", marginBottom: "20px"}}onClick={handleAddSelectedLetters}>Add Word</button>
@@ -92,55 +89,57 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords }
           Clear selected letters when a new word is chosen
         </label>
       </div>
-        </div></div>
+        </div>
+      </div>
+      <div style={{ flex: 1.1, overflow: 'auto' , margin:"1vw"}}>
+         {numbers.map((letter) => (
+          <button
+            key={letter}
+            onClick={() => handleLetterClick(letter)}
+            style={{ width: "calc(8vw)", paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize:"calc(2vw + 2vh)", borderRadius: "50%", color: "darkred"}}
+          >
+            {letter}
+          </button>
+        ))}
+        <br></br>
         {alphabet.map((letter) => (
           <button
             key={letter}
             onClick={() => handleLetterClick(letter)}
-            style={{ marginLeft: "calc(1vw)",paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize: "calc(3.5vw)", borderRadius: "50%",}}
+            style={{ width: "calc(10vw)" ,paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize: "calc(2vw + 2vh)", borderRadius: "50%",}}
           >
             {letter}
           </button>
-        ))}
-        {numbers.map((letter) => (
-          <button
-            key={letter}
-            onClick={() => handleLetterClick(letter)}
-            style={{ marginLeft: "calc(1vw)", paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize: "calc(3.5vw)", borderRadius: "50%", color: "darkred"}}
-          >
-            {letter}
-          </button>
-        ))}
-
-  
-        <div style={{margin: "20px", fontSize: "50px", color: "blueviolet", minHeight:"50px"}}>{selectedLetters}</div>
-
-<div className={styles.wordCloud} style={{ margin: "auto", display: "flex", textAlign: "center" }}>
-  {visibleWords
-    .sort((a, b) => a.text.localeCompare(b.text))
-    .map((word) => (
-      <div
-        key={word.id}
-        onClick={() => handleAddWord(word.text)}
-        className={styles.word}
-        style={{
-          fontSize: `${computeFontSize(word.frequency)}px`,
-          backgroundColor: "lightgrey",
-          borderRadius: "50%",
-          padding: "5px 10px",
-          margin: "5px",
-          alignContent: "center",
-          color: "black",
-          display: "inline-block",
-          paddingTop: "20px",
-          paddingBottom: "20px"
-        }}
-      >
-        {word.text}
+        ))}<div></div>
+        </div>
+           <div style={{ fontSize: "50px", color: "blueviolet"}}>{selectedLetters}</div>
+      <div className={styles.wordCloud} style={{ flex: 1, overflow: 'auto', margin: "auto", display: "flex", textAlign: "center" }}>
+        {visibleWords
+          .sort((a, b) => a.text.localeCompare(b.text))
+          .map((word) => (
+            <div
+              key={word.id}
+              onClick={() => handleAddWord(word.text)}
+              className={styles.word}
+              style={{
+                fontSize: `${computeFontSize(word.frequency)}px`,
+                backgroundColor: "lightgrey",
+                borderRadius: "50%",
+                padding: "5px 10px",
+                margin: "5px",
+                alignContent: "center",
+                color: "black",
+                display: "inline-block",
+                paddingTop: "20px",
+                paddingBottom: "20px"
+              }}
+            >
+              {word.text}
+            </div>
+          ))}
+             
       </div>
-    ))}
-</div>   </div>
-  );
-};
+    </div>
+  ); }
 
 export default WordCloud;

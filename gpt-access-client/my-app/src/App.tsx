@@ -43,39 +43,34 @@ const App: React.FC = () => {
     handleSubmit(new Event("submit") as any)}}, [selectedWords])
 
   return (
-    <div className="App">
+    <div className="App" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <h1>Sentence Generator</h1>
-<div style={{minHeight: "125px"}}>
-      {result && (
+      <div style={{ flex: .6, overflow: 'auto' }}>
+        {result && (
+          <div>
+            <p style={{height: ""}}>
+              {result.map((item, index) => (
+                <div key={index} style={{marginBottom: "20px", fontWeight:"bold", fontSize: "120%", color: "darkolivegreen"}}>
+                  {item}
+                  <button style={{backgroundColor: "green", color:"white", marginLeft: "10px", paddingLeft: "20px", paddingRight: "20px", fontWeight:"bolder"}} onClick={() => playTTS(item)}>Play</button>
+                </div>
+              ))}
+            </p>
+          </div>
+        )}
         <div>
-          <p>
-            {result.map((item, index) => (
-              <div key={index} style={{marginBottom: "20px", fontWeight:"bold", fontSize: "120%", color: "darkolivegreen"}}>
-                {item}
-                <button style={{backgroundColor: "green", color:"white", marginLeft: "10px", paddingLeft: "20px", paddingRight: "20px", fontWeight:"bolder"}}onClick={() => playTTS(item)}>Play</button>
-              </div>
-            ))}
-          </p>
-        </div>
-      )}</div>
-       <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ flex: .2, overflow: 'auto' }}>
         <label htmlFor="animal"></label>
-        {/* <input
-          type="text"
-          id="animal"
-          value={animal}
-          onChange={(e) => setAnimal(e.target.value)}
-        /> */}
-        {/* <button type="submit" style={{fontSize: 50, marginBottom: "20px", borderRadius: "2%", color: "white", backgroundColor: "black"}}>Generate Sentences</button> */}
-      </form>
-      {selectedWords.length > 0 &&  <button style={{backgroundColor: "green", color:"white", marginLeft: "10px", paddingLeft: "20px", paddingRight: "20px", fontWeight:"bolder"}}onClick={() => playTTS(selectedWords.toString())}>Play</button>}
-      {<WordCloud 
-        selectedWords = {selectedWords}
-        setSelectedWords = {setSelectedWords}
-
+        {selectedWords.length > 0 &&  <button style={{backgroundColor: "green", color:"white", marginLeft: "10px", paddingLeft: "20px", paddingRight: "20px", fontWeight:"bolder"}}onClick={() => playTTS(selectedWords.toString())}>Play</button>}
+      </form></div>
+      </div>
+      <div style={{ flex: 2, overflow: 'auto' }}>
+        {<WordCloud 
+          selectedWords = {selectedWords}
+          setSelectedWords = {setSelectedWords}
         />}
+      </div>
     </div>
-  );
-};
-
+    );
+  };
 export default App;
