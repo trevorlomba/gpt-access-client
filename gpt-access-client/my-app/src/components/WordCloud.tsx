@@ -56,6 +56,8 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
     return minFontSize + (((frequency - minFrequency) / (maxFrequency - minFrequency)) * (maxFontSize - minFontSize));
   };
 
+  const tags = ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8"]
+
 //   const color = () => {
 //     return '#' + Math.floor(Math.random()*16777215).toString(16);
 //   };
@@ -65,9 +67,9 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ flex: 1, overflow: 'auto', height: "100%"}}>
-        <div style={{height:"3rem"}}>{selectedWords.map((val, i) => (
-          <button key={i} value={val} onClick={() => handleAddWord(val)} style={{fontSize: "1rem", margin: "5px", marginBottom: "10px"}}>
+      <div style={{ flex: 1, overflow: '', height: "100%"}}>
+        <div style={{height:"4rem"}}>{selectedWords.map((val, i) => (
+          <button key={i} value={val} onClick={() => handleAddWord(val)} style={{fontSize: "1rem", margin: "5px", marginBottom: "10px", padding: "10px"}}>
             {val}
           </button>
         ))}</div>
@@ -85,7 +87,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
          
         </div>
       </div>
-      <div style={{ flex: 3, overflow: 'auto' , margin:"1vw"}}>
+      <div style={{ flex: 1.5, overflow: '' , margin:"1vw"}}>
          <div>
         <label>
           <input
@@ -96,18 +98,19 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
           />
           Clear letters when a word is chosen
         </label>
-      </div><div>
-         {numbers.map((letter) => (
+      </div>
+   <div>
+         {numbers.map((number) => (
           <>
           <button
-            key={letter}
-            onClick={() => handleLetterClick(letter)}
-            style={{ width: "calc(8vw)", paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize:"calc(calc(.7vw + 1vh)", padding: "calc(.5vh)", borderRadius: "20%", color: "darkgreen", fontWeight: "bolder", backgroundColor: "lightgreen"}}
+            key={number}
+            onClick={() => handleLetterClick(number)}
+            style={{ width: "calc(8vw)", paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize:"calc(1vw + 1vh)", padding: "calc(.5vh)", borderRadius: "20%", color: "darkgreen", fontWeight: "bolder", backgroundColor: "lightgreen"}}
           >
-            {letter}
+            {number}
 
           </button>
-          {letter === "0" && <br></br>}
+          {number === "0" && <br></br>}
           </>
         ))}
         {alphabet.map((letter) => (<>
@@ -123,8 +126,20 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
           {letter === "M" && <br></br>}
             </>
         ))}</div>
-        <div></div>
-        
+           <div>
+            {/* map a new button for reach item in array tags */}
+            {tags.map((tag) => (
+              <button
+
+                key={tag}
+                // onClick={() => handleLetterClick(tag)}
+                style={{ width: `calc(90vw/${tags.length})`, paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize:"auto", padding: "calc(.5vh)", borderRadius: "20%", color: "darkred", fontWeight: "bolder", backgroundColor: "pink"}}
+              >
+                {tag}
+              </button>
+            ))}</div>
+            </div>
+        <div style={{ flex: 2, overflow: 'auto' , margin:"1vw"}}>
          <span style={{ fontSize: "50px", color: "blueviolet"}}>{selectedLetters}</span>
         {visibleWords
           .sort((a, b) => a.text.localeCompare(b.text))
@@ -152,7 +167,6 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
               {word.text}
             </div>
           ))}
-             
       </div>
     </div>
   ); }
