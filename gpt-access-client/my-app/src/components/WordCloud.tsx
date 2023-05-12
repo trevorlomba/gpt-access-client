@@ -60,28 +60,28 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
 //     return '#' + Math.floor(Math.random()*16777215).toString(16);
 //   };
 
-  const alphabet = "QWERTYUIOPOASDFGHJKLZXCVBNM".split("");
+  const alphabet = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
   const numbers = "12345676890".split("");
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ flex: .9, overflow: 'auto', height: "100%"}}>
-        {selectedWords.map((val, i) => (
-          <button key={i} value={val} onClick={() => handleAddWord(val)} style={{fontSize: "110%", margin: "5px", marginBottom: "10px"}}>
+      <div style={{ flex: 1, overflow: 'auto', height: "100%"}}>
+        <div style={{height:"3rem"}}>{selectedWords.map((val, i) => (
+          <button key={i} value={val} onClick={() => handleAddWord(val)} style={{fontSize: "1rem", margin: "5px", marginBottom: "10px"}}>
             {val}
           </button>
-        ))}
+        ))}</div>
         
           <div>
-            <button style = {{backgroundColor: "lightgrey", fontSize: "calc(1vw + 1vh)",  padding: "10px", width: "40vw"}} onClick={() => setSelectedWords([])}>Clear Selected Words</button>
-        <button style={{backgroundColor: "green", color:"white", fontSize: "calc(1vw + 1vh)",  padding: "10px", fontWeight:"bolder", width: "40vw"}}onClick={() => playTTS(selectedWords.toString())}>Play Selected Words</button>
+            <button style = {{backgroundColor: "wheat", fontSize: "calc(.7vw + 1vh)",  padding: "10px", width: "48%", maxHeight: "5%"}} onClick={() => setSelectedWords([])}>Clear Words</button>
+        <button style={{backgroundColor: "green", color:"white", fontSize: "calc(.7vw + 1vh)",  padding: "10px", fontWeight:"bolder",  width: "48%"}}onClick={() => playTTS(selectedWords.toString())}>Play Selected Words</button>
 
           </div>
 
         <div>
-          <button style={{ margin: "1px", padding: "10px", fontSize: "calc(1vw + 1vh)", backgroundColor: "lightgrey", width: "40vw"}} onClick={() => setSelectedLetters([]) }>Clear Selected Letters</button>
-          <button style={{ margin: "1px", padding: "10px", fontSize: "calc(1vw + 1vh)", backgroundColor: "firebrick", color: "whitesmoke", width: "20vw"}} onClick={() => setSelectedLetters(selectedLetters.slice(0, -1))}>Backspace</button>
-          <button style={{ margin: "1px", padding: "10px", fontSize: "calc(1vw + 1vh)", backgroundColor: "lightskyblue", marginBottom: "calc(2vh)", width: "20vw"}}onClick={handleAddSelectedLetters}>Add Word</button>
+          <button style={{ margin: "1px", padding: "10px", fontSize: "calc(.7vw + 1vh)", backgroundColor: "lightgrey",  width: "30%"}} onClick={() => setSelectedLetters([]) }>Clear  Letters</button>
+          <button style={{ margin: "1px", padding: "10px", fontSize: "calc(.7vw + 1vh)", backgroundColor: "indianred", color: "whitesmoke",  width: "30%"}} onClick={() => setSelectedLetters(selectedLetters.slice(0, -1))}>Backspace</button>
+          <button style={{ margin: "1px", padding: "10px", fontSize: "calc(.7vw + 1vh)", backgroundColor: "cornflowerblue", marginBottom: "calc(2vh)",  color: "whitesmoke", width: "30%"}}onClick={handleAddSelectedLetters}>Add Word</button>
          
         </div>
       </div>
@@ -94,7 +94,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
             style={{marginBottom: "20px"}}
             onChange={() => setClearLettersOnWordSelect(!clearLettersOnWordSelect)}
           />
-          Clear selected letters when a new word is chosen
+          Clear letters when a word is chosen
         </label>
       </div><div>
          {numbers.map((letter) => (
@@ -102,7 +102,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
           <button
             key={letter}
             onClick={() => handleLetterClick(letter)}
-            style={{ width: "calc(8vw)", paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize:"calc(calc(1vw + 1vh)", padding: "calc(.5vh)", borderRadius: "50%", color: "darkred"}}
+            style={{ width: "calc(8vw)", paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize:"calc(calc(.7vw + 1vh)", padding: "calc(.5vh)", borderRadius: "20%", color: "darkgreen", fontWeight: "bolder", backgroundColor: "lightgreen"}}
           >
             {letter}
 
@@ -114,7 +114,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
           <button
             key={letter}
             onClick={() => handleLetterClick(letter)}
-            style={{ width: "calc(9vw)" ,paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize: "calc(1vw + 1vh)", padding: "calc(.5vh)", borderRadius: "50%", backgroundColor: "lightyellow"}}
+            style={{ width: "calc(9vw)" ,paddingLeft: "calc(.7vw)", paddingRight: "calc(.7vw)", fontSize: "calc(1vw + 1vh)", padding: "calc(.5vh)", borderRadius: "20%", backgroundColor: "lightblue", color: "darkblue"}}
             >
             {letter}
           </button>
@@ -135,15 +135,18 @@ const WordCloud: React.FC<WordCloudProps> = ({ selectedWords, setSelectedWords, 
               className={styles.word}
               style={{
                 fontSize: `${computeFontSize(word.frequency)}px`,
+                // border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
                 backgroundColor: "lightgrey",
-                borderRadius: "50%",
+                borderRadius: "20%",
                 padding: "5px 10px",
                 margin: "5px",
                 alignContent: "center",
                 color: "black",
                 display: "inline-block",
                 paddingTop: "20px",
-                paddingBottom: "20px"
+                paddingBottom: "20px",
+                height: "auto",
+                filter: `drop-shadow(0 ${(computeFontSize(word.frequency)/3)}px ${(computeFontSize(word.frequency)/5)}px grey)`
               }}
             >
               {word.text}
