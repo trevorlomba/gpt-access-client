@@ -199,7 +199,10 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							fontWeight: 'bolder',
 							width: '30%',
 						}}
-						onClick={() => playTTS(selectedWords.toString())}>
+						onClick={() => {
+							const words = selectedWords.map((word) => word.text).join(' ')
+							playTTS(words)
+						}}>
 						Play Selected Words
 					</button>
 					<button
@@ -323,15 +326,14 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				<div
 					onClick={() => handleAddWord(selectedLetters.join('').toLowerCase())}
 					className={styles.word}
-					style=
-					{{
+					style={{
 						fontSize: `calc(90vw/12)`,
 						// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
 						backgroundColor: 'lightcoral',
 						borderRadius: '20%',
 						padding: '5px 10px',
 						margin: '5px',
-            marginTop: 'auto',
+						marginTop: 'auto',
 						alignContent: 'center',
 						color: 'black',
 						display: 'inline-block',
@@ -340,8 +342,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						height: 'auto',
 						filter: `drop-shadow(0 90px 90px grey)`,
 					}}>
-						{selectedLetters}
-			
+					{selectedLetters}
 				</div>
 				{visibleWords
 					.sort((a, b) => a.text.localeCompare(b.text))
