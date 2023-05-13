@@ -24,47 +24,59 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
   const handleRemoveWord = (val: string) => {
     handleAddWord(val)
-		let newWords = selectedWords.filter((wordObj) => wordObj.text !== val)
+	// let newWords = selectedWords.filter((wordObj) => wordObj.text !== val)
 
-		if (currentTag) {
-			let newVal = `${currentTag}: ${val}`
-			newWords = newWords.filter((wordObj) => wordObj.text !== newVal)
-		}
-    	if (clearTagOnApply) {
-				setCurrentTag('')
-			}
+	// if (currentTag) {
+	// 	let newVal = `${currentTag}: ${val}`
+	// 	newWords = newWords.filter((wordObj) => wordObj.text !== newVal)
+	// }
+	// if (clearTagOnApply) {
+	// 		setCurrentTag('')
+	// 	}
 
-		// setSelectedWords(newWords)
+	// // setSelectedWords(newWords)
 	}
 
 	const handleAddWord = (val: string) => {
-	if (selectedWords.find((wordObj) => wordObj.text === val)) {
-    const wordObj = selectedWords.find((wordObj) => wordObj.text === val)
-    // if the word object has a tag value that is not undefined and not the current tag, then do not remove it but update the tag
-    if (wordObj && wordObj.tag !== currentTag) {
-      wordObj.tag = currentTag 
-      console.log(wordObj)
-      setSelectedWords([
-				...selectedWords.filter((wordObj) => wordObj.text !== val), wordObj])
-    
-    } else {
-		setSelectedWords(
-			selectedWords.filter((wordObj) => wordObj.text !== val)
-		)}
-	} else {
-		setSelectedWords([...selectedWords, { text: val, tag: currentTag }])
-		setSelectedWords([...selectedWords, { text: val, tag: currentTag }])
-		if (clearLettersOnWordSelect) {
-			setSelectedLetters([])
+		// Find the index of the wordObj in selectedWords
+		const index = selectedWords.findIndex((wordObj) => wordObj.text === val)
+
+		// If the wordObj is found in selectedWords
+		if (index !== -1) {
+			const wordObj = selectedWords[index]
+
+			// If the word object has a tag value that is not undefined and not the current tag, then do not remove it but update the tag
+			if (wordObj.tag !== currentTag) {
+				wordObj.tag = currentTag
+				console.log(wordObj)
+
+				// Map over the selectedWords and replace the wordObj at the specific index
+				setSelectedWords(
+					selectedWords.map((word, i) => (i === index ? wordObj : word))
+				)
+			} else if (wordObj.tag !== '') {
+				wordObj.tag = ''
+			console.log(wordObj)
+				setSelectedWords(
+					selectedWords.map((word, i) => (i === index ? wordObj : word)))
+			} else {
+				setSelectedWords(
+					selectedWords.filter((wordObj) => wordObj.text !== val)
+				)
+			}
+		} else {
+			setSelectedWords([...selectedWords, { text: val, tag: currentTag }])
+
+			if (clearLettersOnWordSelect) {
+				setSelectedLetters([])
+			}
+
 		}
-	
-
-	if (clearTagOnApply) {
-		setCurrentTag('')
+		if (clearTagOnApply) {
+			console.log('clearTag')
+			setCurrentTag('')
+		}
 	}
-}
-	}
-
 	const handleAddSelectedLetters = () => {
 		const selectedWord = selectedLetters.join('').toLowerCase()
 		handleAddWord(selectedWord)
@@ -111,14 +123,14 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				word.text.startsWith(selectedLetters.join('').toLowerCase())
 		)
 		.sort((a, b) => b.frequency - a.frequency) // Sort by frequency in descending order
-		.slice(0, 100) // Keep only the top 20 words
+		.slice(0, 30) // Keep only the top 20 words
 
 	const minFrequency = Math.min(...visibleWords.map((word) => word.frequency))
 	const maxFrequency = Math.max(...visibleWords.map((word) => word.frequency))
 
 	const computeFontSize = (frequency: number): number => {
-		const minFontSize = 20
-		const maxFontSize = 70
+		const minFontSize = 25
+		const maxFontSize = 50
 		return (
 			minFontSize +
 			((frequency - minFrequency) / (maxFrequency - minFrequency)) *
@@ -190,6 +202,17 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						onClick={() => setSelectedWords([])}>
 						Clear Words
 					</button>
+							<button
+								style={{
+									margin: '1px',
+									padding: '10px',
+									fontSize: 'calc(.7vw + 1vh)',
+									backgroundColor: 'lightgrey',
+									width: '30%',
+								}}
+								onClick={() => setSelectedLetters([])}>
+								Clear Letters
+							</button>
 					<button
 						style={{
 							backgroundColor: 'green',
@@ -204,17 +227,6 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							playTTS(words)
 						}}>
 						Play Selected Words
-					</button>
-					<button
-						style={{
-							margin: '1px',
-							padding: '10px',
-							fontSize: 'calc(.7vw + 1vh)',
-							backgroundColor: 'lightgrey',
-							width: '30%',
-						}}
-						onClick={() => setSelectedLetters([])}>
-						Clear Letters
 					</button>
 				</div>
 

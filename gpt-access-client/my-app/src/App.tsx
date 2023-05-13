@@ -52,34 +52,55 @@ const App: React.FC = () => {
     handleSubmit(new Event("submit") as any)}}, [selectedWords])
 
   return (
-    <div className="App" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <h1>Sentence Generator</h1>
-      <div style={{ flex: .6, overflow: 'auto' }}>
-        {result && (
-          <div>
-            <p style={{height: ""}}>
-              {result.map((item, index) => (
-                <div key={index} style={{fontWeight:"bold", fontSize: "calc(1vw + 1vh)", color: "darkolivegreen", marginBottom: ".5vh"}}>
-                  {item}
-                  <button style={{backgroundColor: "green", color:"white", marginLeft: "10px", width: "20vw", height:
-                  "4vh", justifyContent: "center", fontWeight:"bolder"}} onClick={() => playTTS(item)}>Play</button>
-                </div>
-              ))}
-            </p>
-          </div>
-        )}
-        <div>
-     </div>
-      </div>
-      <div style={{ flex: 2, overflow: 'auto' }}>
-        {<WordCloud 
-          selectedWords = {selectedWords}
-          setSelectedWords = {setSelectedWords}
-          handleSubmit = {handleSubmit}
-          playTTS = {playTTS}
-        />}
-      </div>
-    </div>
-    );
+		<div
+			className='App'
+			style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+			<h2>Sentence Generator</h2>
+			<div style={{ flex: .7, overflow: 'auto', flexDirection: 'row' }}>
+				{result && (
+					<div style={{ flexDirection: 'row' }}>
+						<p style={{ height: '' }}>
+							{result.map((item, index) => (
+								<div
+									key={index}
+									style={{
+										fontWeight: 'bold',
+										color: 'darkolivegreen',
+										marginBottom: '.5vh',
+									}}>
+									{/* {item} */}
+									<button
+										style={{
+                      fontSize: '180%',
+											backgroundColor: 'green',
+											color: 'white',
+											marginLeft: '10px',
+											width: '80vw',
+											height: '4vh',
+											justifyContent: 'center',
+											fontWeight: 'bold',
+										}}
+										onClick={() => playTTS(item)}>
+										{item}
+									</button>
+								</div>
+							))}
+						</p>
+					</div>
+				)}
+				<div></div>
+			</div>
+			<div style={{ flex: 3, overflow: 'auto' }}>
+				{
+					<WordCloud
+						selectedWords={selectedWords}
+						setSelectedWords={setSelectedWords}
+						handleSubmit={handleSubmit}
+						playTTS={playTTS}
+					/>
+				}
+			</div>
+		</div>
+	)
   };
 export default App;
