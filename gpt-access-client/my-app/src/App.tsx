@@ -55,7 +55,7 @@ const App: React.FC = () => {
 		<div
 			className='App'
 			style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-			<h2>Sentence Generator</h2>
+			<h2>Phrase Generator</h2>
 			<div style={{ flex: .7, overflow: 'auto', flexDirection: 'row' }}>
 				{result && (
 					<div style={{ flexDirection: 'row' }}>
