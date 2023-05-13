@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/gpt-access-client/static/css/main.778da051.css",
-    "main.js": "/gpt-access-client/static/js/main.e7395265.js",
+    "main.js": "/gpt-access-client/static/js/main.4972018e.js",
     "static/js/787.28cb0dcd.chunk.js": "/gpt-access-client/static/js/787.28cb0dcd.chunk.js",
     "index.html": "/gpt-access-client/index.html",
     "main.778da051.css.map": "/gpt-access-client/static/css/main.778da051.css.map",
-    "main.e7395265.js.map": "/gpt-access-client/static/js/main.e7395265.js.map",
+    "main.4972018e.js.map": "/gpt-access-client/static/js/main.4972018e.js.map",
     "787.28cb0dcd.chunk.js.map": "/gpt-access-client/static/js/787.28cb0dcd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.778da051.css",
-    "static/js/main.e7395265.js"
+    "static/js/main.4972018e.js"
   ]
 }
