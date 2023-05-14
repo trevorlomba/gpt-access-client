@@ -150,6 +150,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 	const alphabet = 'QWERTYUIOPASDFGHJKLZXCVBNM'.split('')
 	const numbers = '12345676890'.split('')
+	const pronouns = ["I/me/mine", "you/yours", "he/him/his", "she/her/hers", "we/us/ours", "they/them/theirs", "it"]
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -173,25 +174,26 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							</button>
 						))}
 					</div>
-					<label>
-						<input
-							type='checkbox'
-							checked={clearLettersOnWordSelect}
-							style={{ marginBottom: '1rem' }}
-							onChange={() =>
-								setClearLettersOnWordSelect(!clearLettersOnWordSelect)
-							}
-						/>
-						Clear letters when a word is chosen
-					</label>
-					<label>
-						<input
-							type='checkbox'
-							checked={clearTagOnApply}
-							onChange={() => setClearTagOnApply(!clearTagOnApply)}
-						/>
-						Clear tag when applied
-					</label>
+					<div style={{ marginBottom: '1rem' }}>
+						<label style={{ margin: '1rem' }}>
+							<input
+								type='checkbox'
+								checked={clearLettersOnWordSelect}
+								onChange={() =>
+									setClearLettersOnWordSelect(!clearLettersOnWordSelect)
+								}
+							/>
+							Clear letters when a word is chosen
+						</label>
+						<label style={{ margin: '1rem' }}>
+							<input
+								type='checkbox'
+								checked={clearTagOnApply}
+								onChange={() => setClearTagOnApply(!clearTagOnApply)}
+							/>
+							Clear tag when applied
+						</label>
+					</div>
 				</div>
 
 				<div>
@@ -241,44 +243,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				<div></div>
 			</div>
 			<div style={{ flex: 1.5, overflow: '', margin: '1vw' }}>
-				<div>
-					{tags.map((tag) => (
-						<button
-							key={tag}
-							onClick={() => handleTagClick(tag)}
-							style={{
-								width: `calc(85vw/${tags.length + 1})`,
-								paddingLeft: 'calc(.7vw)',
-								paddingRight: 'calc(.7vw)',
-								fontSize: 'auto',
-								padding: 'calc(1vh)',
-								borderRadius: '10%',
-								color: currentTag === tag ? 'darkred' : 'darkred',
-								fontWeight: 'bolder',
-								backgroundColor: currentTag === tag ? 'pink' : 'lightgrey',
-							}}>
-							{tag}
-						</button>
-					))}
-
-					<button
-						style={{
-							margin: '1px',
-							width: `calc(85vw/(calc(${tags.length + 1})))`,
-							padding: 'calc(1vh)',
-							borderRadius: '10%',
-							fontWeight: 'bolder',
-							paddingLeft: 'calc(.7vw)',
-							paddingRight: 'calc(.7vw)',
-							fontSize: 'auto',
-							backgroundColor: 'cornflowerblue',
-							marginBottom: 'calc(2vh)',
-							color: 'whitesmoke',
-						}}
-						onClick={handleAddSelectedLetters}>
-						Add Word
-					</button>
-				</div>
+				<div></div>
 				<div>
 					{numbers.map((number) => (
 						<>
@@ -339,9 +304,86 @@ const WordCloud: React.FC<WordCloudProps> = ({
 								}}>
 								{letter}
 							</button>
-							{letter === 'P' && <br></br>}
+							{letter === 'P' && (
+								<>
+									<br></br>
+								</>
+							)}
 							{letter === 'L' && <br></br>}
-							{letter === 'M' && <br></br>}
+						</>
+					))}
+					<button
+						onClick={() => handleAddWord('?')}
+						style={{
+							width: 'calc(9vw)',
+							paddingLeft: 'calc(.7vw)',
+							paddingRight: 'calc(.7vw)',
+							fontSize: 'calc(1vw + 1vh)',
+							padding: 'calc(1.5vh)',
+							borderRadius: '20%',
+							backgroundColor: 'pink',
+							color: 'darkblue',
+							height: '120%',
+						}}>
+						{'?'}
+					</button>
+					<br></br>
+					<br></br>
+					{tags.map((tag) => (
+						<button
+							key={tag}
+							onClick={() => handleTagClick(tag)}
+							style={{
+								width: `calc(85vw/${tags.length + 1})`,
+								paddingLeft: 'calc(.7vw)',
+								paddingRight: 'calc(.7vw)',
+								fontSize: '110%',
+								padding: 'calc(1vh)',
+								marginBottom: '.5rem',
+								borderRadius: '10%',
+								color: currentTag === tag ? 'darkred' : 'darkred',
+								fontWeight: '',
+								backgroundColor: currentTag === tag ? 'pink' : 'lightgrey',
+							}}>
+							{tag}
+						</button>
+					))}{' '}
+					<button
+						style={{
+							margin: '1px',
+							width: `calc(85vw/(calc(${tags.length + 1})))`,
+							padding: 'calc(1vh)',
+							borderRadius: '10%',
+							fontWeight: 'bolder',
+							paddingLeft: 'calc(.7vw)',
+							paddingRight: 'calc(.7vw)',
+							fontSize: '110%',
+							backgroundColor: 'cornflowerblue',
+							color: 'whitesmoke',
+						}}
+						onClick={handleAddSelectedLetters}>
+						Add Word
+					</button>
+					{pronouns.map((letter) => (
+						<>
+							<button
+								key={letter}
+								onClick={() => handleAddWord(letter)}
+								style={{
+									width: `calc(90vw/${pronouns.length})`,
+									paddingLeft: 'calc(.7vw)',
+									paddingRight: 'calc(.7vw)',
+
+									fontSize: '90%',
+									fontWeight: '',
+									padding: 'calc(1.5vh)',
+									borderRadius: '10%',
+									backgroundColor: 'lightgrey',
+									color: 'darkblue',
+									height: '120%',
+								}}>
+								{letter}
+							</button>
 						</>
 					))}
 				</div>
@@ -392,8 +434,12 @@ const WordCloud: React.FC<WordCloudProps> = ({
 								paddingBottom: '20px',
 								height: 'auto',
 								filter: `drop-shadow(0 ${
-									computeFontSize(word.frequency) / 3
-								}px ${computeFontSize(word.frequency) / 5}px grey)`,
+									computeFontSize(word.frequency) / 2
+								}px ${computeFontSize(word.frequency) / 4}px grey)`,
+								// marginTop: `-${
+								// 	computeFontSize(word.frequency)
+								// /10}px`
+								// , marginBottom: "10px"
 							}}>
 							{word.text}
 						</div>
