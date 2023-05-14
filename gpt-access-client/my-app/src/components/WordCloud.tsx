@@ -21,8 +21,10 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	const [clearLettersOnWordSelect, setClearLettersOnWordSelect] = useState(true)
 	const [currentTag, setCurrentTag] = useState<string | undefined>(undefined)
 	const [clearTagOnApply, setClearTagOnApply] = useState(true)
+	const [selectedPosition, setSelectedPosition] = useState<number | null>(null)
 
 	const handleRemoveWord = (val: string) => {
+		//  if selected position is null,
 		handleAddWord(val)
 		// let newWords = selectedWords.filter((wordObj) => wordObj.text !== val)
 
@@ -60,23 +62,52 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				setSelectedWords(
 					selectedWords.map((word, i) => (i === index ? wordObj : word))
 				)
-			} else {
+			} else if (selectedPosition !== null) {
+    // Find current position of word
+    const currentPosition = selectedWords.findIndex((word) => word.text === val);
+    
+    // Copy the words array
+    const newWords = [...selectedWords];
+    
+    // Remove word at current position
+    if (currentPosition !== -1) {
+        newWords.splice(currentPosition, 1);
+    }
+
+    // Insert word at selected position
+    newWords.splice(selectedPosition, 0, { text: val, tag: currentTag });
+
+    setSelectedWords(newWords);
+} else {
 				setSelectedWords(
 					selectedWords.filter((wordObj) => wordObj.text !== val)
 				)
 			}
 		} else {
-			setSelectedWords([...selectedWords, { text: val, tag: currentTag }])
-
-			if (clearLettersOnWordSelect) {
-				setSelectedLetters([])
+			// If no selected position, append word at the end
+			if (selectedPosition === null) {
+				setSelectedWords([...selectedWords, { text: val, tag: currentTag }])
+			} else {
+				// Insert word at selected position
+				const newWords = [...selectedWords]
+				newWords.splice(selectedPosition, 0, { text: val, tag: currentTag })
+				setSelectedWords(newWords)
 			}
 		}
+
+		if (clearLettersOnWordSelect) {
+			setSelectedLetters([])
+		}
+
 		if (clearTagOnApply) {
 			console.log('clearTag')
 			setCurrentTag('')
 		}
+
+		// Reset selected position after word is added
+		setSelectedPosition(null)
 	}
+
 	const handleAddSelectedLetters = () => {
 		const selectedWord = selectedLetters.join('').toLowerCase()
 		handleAddWord(selectedWord)
@@ -150,7 +181,22 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 	const alphabet = 'QWERTYUIOPASDFGHJKLZXCVBNM'.split('')
 	const numbers = '12345676890'.split('')
-	const pronouns = ["I/me", "you", "he", "she", "we", "they", "it", "my", "your", "his", "her", "our", "their", "its"]
+	const pronouns = [
+		'I/me',
+		'you',
+		'he',
+		'she',
+		'we',
+		'they',
+		'it',
+		'my',
+		'your',
+		'his',
+		'her',
+		'our',
+		'their',
+		'its',
+	]
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -160,17 +206,23 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						style={{ marginTop: 'auto', marginBottom: 'auto', height: '3rem' }}>
 						{selectedWords.map((wordObj, i) => (
 							<>
-							<button style={{
-									fontSize: '1rem',
-									alignSelf: 'center',
-									marginTop: 'auto',
-									marginBottom: 'auto',
-									padding: '10px 10px 10px 10px',
-								}}>+</button>
+								<button
+									style={{
+										fontSize: '1rem',
+										alignSelf: 'center',
+										marginTop: 'auto',
+										marginBottom: 'auto',
+										padding: '10px 10px 10px 10px',
+										backgroundColor:
+											selectedPosition === i  ? 'lightpink' : 'white',
+									}}
+									onClick={selectedPosition !== i ? () => setSelectedPosition(i) : () => setSelectedPosition(null)}>
+									+
+								</button>
 								<button
 									key={i}
 									value={wordObj.text}
-									onClick={() => handleRemoveWord(wordObj.text)}
+									onClick={() => handleAddWord(wordObj.text)}
 									style={{
 										fontSize: '1rem',
 										alignSelf: 'center',

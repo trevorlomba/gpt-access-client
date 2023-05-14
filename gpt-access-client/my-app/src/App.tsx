@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		setResult([]) // Clear the previous results
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < 1; i++) {
 			try {
 				const formData = new URLSearchParams()
 
