@@ -150,7 +150,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 	const alphabet = 'QWERTYUIOPASDFGHJKLZXCVBNM'.split('')
 	const numbers = '12345676890'.split('')
-	const pronouns = ["I/me/mine", "you/yours", "he/him/his", "she/her/hers", "we/us/ours", "they/them/theirs", "it"]
+	const pronouns = ["I/me", "you", "he", "she", "we", "they", "it", "my", "your", "his", "her", "our", "their", "its"]
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -159,19 +159,30 @@ const WordCloud: React.FC<WordCloudProps> = ({
 					<div
 						style={{ marginTop: 'auto', marginBottom: 'auto', height: '3rem' }}>
 						{selectedWords.map((wordObj, i) => (
-							<button
-								key={i}
-								value={wordObj.text}
-								onClick={() => handleRemoveWord(wordObj.text)}
-								style={{
+							<>
+							<button style={{
 									fontSize: '1rem',
 									alignSelf: 'center',
 									marginTop: 'auto',
 									marginBottom: 'auto',
-									padding: '10px',
-								}}>
-								{wordObj.tag ? `${wordObj.tag}: ${wordObj.text}` : wordObj.text}
-							</button>
+									padding: '10px 10px 10px 10px',
+								}}>+</button>
+								<button
+									key={i}
+									value={wordObj.text}
+									onClick={() => handleRemoveWord(wordObj.text)}
+									style={{
+										fontSize: '1rem',
+										alignSelf: 'center',
+										marginTop: 'auto',
+										marginBottom: 'auto',
+										padding: '10px',
+									}}>
+									{wordObj.tag
+										? `${wordObj.tag}: ${wordObj.text}`
+										: wordObj.text}
+								</button>
+							</>
 						))}
 					</div>
 					<div style={{ marginBottom: '1rem' }}>
@@ -328,7 +339,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						{'?'}
 					</button>
 					<br></br>
-					<br></br>
+					{/* <br></br>
 					{tags.map((tag) => (
 						<button
 							key={tag}
@@ -363,24 +374,25 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						}}
 						onClick={handleAddSelectedLetters}>
 						Add Word
-					</button>
-					{pronouns.map((letter) => (
+					</button> */}
+					{pronouns.map((letter, i) => (
 						<>
 							<button
 								key={letter}
 								onClick={() => handleAddWord(letter)}
 								style={{
-									width: `calc(90vw/${pronouns.length})`,
+									width: `calc(95vw/${pronouns.length / 2})`,
 									paddingLeft: 'calc(.7vw)',
 									paddingRight: 'calc(.7vw)',
 
-									fontSize: '90%',
-									fontWeight: '',
-									padding: 'calc(1.5vh)',
-									borderRadius: '10%',
-									backgroundColor: 'lightgrey',
-									color: 'darkblue',
-									height: '120%',
+									fontSize: '80%',
+									fontWeight: 'bold',
+									padding: 'calc(.8vh)',
+									marginTop: i < 6 ? '1rem' : '0rem',
+									borderRadius: i < 6 ? '10% 10% 0% 0%' : '0 0 10% 10%',
+									backgroundColor: i > 6 ? 'lightgrey' : 'white',
+									color: 'black',
+									height: '100%',
 								}}>
 								{letter}
 							</button>
@@ -389,12 +401,18 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				</div>
 				<div></div>
 			</div>
-			<div style={{ flex: 2, overflow: 'auto', margin: '0vw' }}>
+			<div
+				style={{
+					flex: 2,
+					overflow: 'auto',
+					margin: '0vw',
+					background: 'lightgreen',
+				}}>
 				<div
 					onClick={() => handleAddWord(selectedLetters.join('').toLowerCase())}
 					className={styles.word}
 					style={{
-						fontSize: `calc(calc(45vh + 45vw)/12)`,
+						fontSize: `calc(calc(45vh + 45vw)/20)`,
 						// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
 						backgroundColor: 'lightcoral',
 						borderRadius: '20%',
