@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import wordsData from '../data/words.json'
+import wordsData from '../data/words2.json'
 import styles from '../styles/WordCloud.module.css'
 
 interface WordCloudProps {
@@ -22,19 +22,19 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	const [currentTag, setCurrentTag] = useState<string | undefined>(undefined)
 	const [clearTagOnApply, setClearTagOnApply] = useState(true)
 
-  const handleRemoveWord = (val: string) => {
-    handleAddWord(val)
-	// let newWords = selectedWords.filter((wordObj) => wordObj.text !== val)
+	const handleRemoveWord = (val: string) => {
+		handleAddWord(val)
+		// let newWords = selectedWords.filter((wordObj) => wordObj.text !== val)
 
-	// if (currentTag) {
-	// 	let newVal = `${currentTag}: ${val}`
-	// 	newWords = newWords.filter((wordObj) => wordObj.text !== newVal)
-	// }
-	// if (clearTagOnApply) {
-	// 		setCurrentTag('')
-	// 	}
+		// if (currentTag) {
+		// 	let newVal = `${currentTag}: ${val}`
+		// 	newWords = newWords.filter((wordObj) => wordObj.text !== newVal)
+		// }
+		// if (clearTagOnApply) {
+		// 		setCurrentTag('')
+		// 	}
 
-	// // setSelectedWords(newWords)
+		// // setSelectedWords(newWords)
 	}
 
 	const handleAddWord = (val: string) => {
@@ -56,9 +56,10 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				)
 			} else if (wordObj.tag !== '') {
 				wordObj.tag = ''
-			console.log(wordObj)
+				console.log(wordObj)
 				setSelectedWords(
-					selectedWords.map((word, i) => (i === index ? wordObj : word)))
+					selectedWords.map((word, i) => (i === index ? wordObj : word))
+				)
 			} else {
 				setSelectedWords(
 					selectedWords.filter((wordObj) => wordObj.text !== val)
@@ -70,7 +71,6 @@ const WordCloud: React.FC<WordCloudProps> = ({
 			if (clearLettersOnWordSelect) {
 				setSelectedLetters([])
 			}
-
 		}
 		if (clearTagOnApply) {
 			console.log('clearTag')
@@ -84,25 +84,25 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	}
 
 	const handleTagClick = (tag: string) => {
-    if (currentTag === tag) {
-      setCurrentTag('')
+		if (currentTag === tag) {
+			setCurrentTag('')
 		} else {
-      setCurrentTag(tag)
+			setCurrentTag(tag)
 		}
 	}
 
-// const checkPrefixes = (word: string) => {
-// 	for (const tag of tags) {
-// 		if (word.startsWith(`${tag}:`)) {
-// 			const newWord = word.replace(`${tag}:`, ``)
-// 			setSelectedWords(selectedWords.filter((wordObj) => wordObj.text !== word))
-// 			console.log(word)
-// 			console.log(newWord)
-// 			return newWord
-// 		}
-// 	}
-// 	return word
-// }
+	// const checkPrefixes = (word: string) => {
+	// 	for (const tag of tags) {
+	// 		if (word.startsWith(`${tag}:`)) {
+	// 			const newWord = word.replace(`${tag}:`, ``)
+	// 			setSelectedWords(selectedWords.filter((wordObj) => wordObj.text !== word))
+	// 			console.log(word)
+	// 			console.log(newWord)
+	// 			return newWord
+	// 		}
+	// 	}
+	// 	return word
+	// }
 
 	const handleLetterClick = (letter: string) => {
 		setSelectedLetters([...selectedLetters, letter])
@@ -122,8 +122,12 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				selectedLetters.length === 0 ||
 				word.text.startsWith(selectedLetters.join('').toLowerCase())
 		)
+		.filter(
+			(word) =>
+				!selectedWords.some((selectedWord) => selectedWord.text === word.text)
+		) // filter out already selected words
 		.sort((a, b) => b.frequency - a.frequency) // Sort by frequency in descending order
-		.slice(0, 30) // Keep only the top 20 words
+		.slice(0, 30) // Keep only the top 30 words
 
 	const minFrequency = Math.min(...visibleWords.map((word) => word.frequency))
 	const maxFrequency = Math.max(...visibleWords.map((word) => word.frequency))
@@ -149,8 +153,26 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-			<div style={{ flex: 1, overflow: '', height: '100%' }}>
+			<div style={{ flex: 0.1, overflow: '', height: '100%' }}>
 				<div>
+					<div
+						style={{ marginTop: 'auto', marginBottom: 'auto', height: '3rem' }}>
+						{selectedWords.map((wordObj, i) => (
+							<button
+								key={i}
+								value={wordObj.text}
+								onClick={() => handleRemoveWord(wordObj.text)}
+								style={{
+									fontSize: '1rem',
+									alignSelf: 'center',
+									marginTop: 'auto',
+									marginBottom: 'auto',
+									padding: '10px',
+								}}>
+								{wordObj.tag ? `${wordObj.tag}: ${wordObj.text}` : wordObj.text}
+							</button>
+						))}
+					</div>
 					<label>
 						<input
 							type='checkbox'
@@ -171,47 +193,33 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						Clear tag when applied
 					</label>
 				</div>
-				<div
-					style={{ marginTop: 'auto', marginBottom: 'auto', height: '3rem' }}>
-					{selectedWords.map((wordObj, i) => (
-						<button
-							key={i}
-							value={wordObj.text}
-							onClick={() => handleRemoveWord(wordObj.text)}
-							style={{
-								fontSize: '1rem',
-								alignSelf: 'center',
-								marginTop: 'auto',
-								marginBottom: 'auto',
-								padding: '10px',
-							}}>
-							{wordObj.tag ? `${wordObj.tag}: ${wordObj.text}` : wordObj.text}
-						</button>
-					))}
-				</div>
 
 				<div>
-					<button
-						style={{
-							backgroundColor: 'wheat',
-							fontSize: 'calc(.7vw + 1vh)',
-							padding: '10px',
-							width: '30%',
-							maxHeight: '5%',
-						}}
-						onClick={() => setSelectedWords([])}>
-						Clear Words
-					</button>
 					<button
 						style={{
 							margin: '1px',
 							padding: '10px',
 							fontSize: 'calc(.7vw + 1vh)',
 							backgroundColor: 'lightyellow',
+							color: 'darkyellow',
 							width: '30%',
+							fontWeight: 'bolder',
 						}}
 						onClick={() => setSelectedLetters([])}>
 						Clear Letters
+					</button>
+					<button
+						style={{
+							backgroundColor: 'wheat',
+							fontSize: 'calc(.7vw + 1vh)',
+							padding: '10px',
+							color: 'darkyellow',
+							width: '30%',
+							// maxHeight: '5%',
+							fontWeight: 'bolder',
+						}}
+						onClick={() => setSelectedWords([])}>
+						Clear Words
 					</button>
 					<button
 						style={{
@@ -226,7 +234,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							const words = selectedWords.map((word) => word.text).join(' ')
 							playTTS(words)
 						}}>
-						Play Selected Words
+						Play Words
 					</button>
 				</div>
 
@@ -296,11 +304,14 @@ const WordCloud: React.FC<WordCloudProps> = ({
 					<button
 						style={{
 							width: 'calc(8vw)',
-							paddingLeft: 'calc(.7vw)',
-							paddingRight: 'calc(.7vw)',
-							fontSize: 'calc(1.0vw + 1.0vh)',
+							paddingLeft: 'calc(0vw)',
+							// textAlign: "center",
+							paddingRight: 'calc(0vw)',
+							fontSize: 'calc(1vw + 1vh)',
+							minHeight: 'calc(1vw + 1vh)',
 							// lineHeight: "calc(1vw + 1vh)",
 							padding: 'calc(1vh)',
+							alignSelf: 'center',
 							borderRadius: '20%',
 							color: 'white',
 							fontWeight: 'bolder',
@@ -336,27 +347,27 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				</div>
 				<div></div>
 			</div>
-			<div style={{ flex: 2, overflow: 'auto', margin: '1vw' }}>
+			<div style={{ flex: 2, overflow: 'auto', margin: '0vw' }}>
 				<div
 					onClick={() => handleAddWord(selectedLetters.join('').toLowerCase())}
 					className={styles.word}
 					style={{
-						fontSize: `calc(90vw/12)`,
+						fontSize: `calc(calc(45vh + 45vw)/12)`,
 						// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
 						backgroundColor: 'lightcoral',
 						borderRadius: '20%',
 						padding: '5px 10px',
+						paddingTop: '0',
 						margin: '5px',
 						marginTop: 'auto',
 						alignContent: 'center',
 						color: 'black',
 						display: 'inline-block',
-						paddingTop: '20px',
 						paddingBottom: '20px',
 						height: 'auto',
 						filter: `drop-shadow(0 90px 90px grey)`,
 					}}>
-					{selectedLetters}
+					{selectedLetters.join('').toLowerCase()}
 				</div>
 				{visibleWords
 					.sort((a, b) => a.text.localeCompare(b.text))
@@ -366,12 +377,14 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							onClick={() => handleAddWord(word.text)}
 							className={styles.word}
 							style={{
-								fontSize: `calc(${computeFontSize(word.frequency)}vw/12)`,
+								fontSize: `calc(calc(${computeFontSize(
+									word.frequency
+								)}vh + (${computeFontSize(word.frequency)}vw))/30)`,
 								// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
 								backgroundColor: 'lightgrey',
 								borderRadius: '20%',
 								padding: '5px 10px',
-								margin: '5px',
+								margin: '1vh',
 								alignContent: 'center',
 								color: 'black',
 								display: 'inline-block',

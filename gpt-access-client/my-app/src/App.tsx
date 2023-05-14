@@ -55,40 +55,39 @@ const App: React.FC = () => {
 		<div
 			className='App'
 			style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-			<h2>Phrase Generator</h2>
-			<div style={{ flex: .7, overflow: 'auto', flexDirection: 'row' }}>
-				{result && (
-					<div style={{ flexDirection: 'row' }}>
-						<p style={{ height: '' }}>
-							{result.map((item, index) => (
-								<div
-									key={index}
-									style={{
-										fontWeight: 'bold',
-										color: 'darkolivegreen',
-										marginBottom: '.5vh',
-									}}>
-									{/* {item} */}
-									<button
-										style={{
-                      fontSize: '180%',
-											backgroundColor: 'green',
-											color: 'white',
-											marginLeft: '10px',
-											width: '80vw',
-											height: '4vh',
-											justifyContent: 'center',
-											fontWeight: 'bold',
-										}}
-										onClick={() => playTTS(item)}>
-										{item}
-									</button>
-								</div>
-							))}
-						</p>
-					</div>
-				)}
-				<div></div>
+			<div
+				style={{
+					flex: 0.7,
+					overflow: 'auto',
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'space-around',
+					margin: 'auto',
+				}}>
+				{result &&
+					result.map((item, index) => (
+						<div
+							key={index}
+							style={{
+								fontWeight: 'bold',
+								color: 'darkolivegreen',
+							}}>
+							<button
+								style={{
+									fontSize: 'calc(1vw + 1vh)',
+									backgroundColor: 'green',
+									color: 'white',
+									marginLeft: '10px',
+									width: '90vw',
+									height: 'calc(5vh)',
+									justifyContent: 'space-between',
+									fontWeight: 'bold',
+								}}
+								onClick={() => playTTS(item)}>
+								{item}
+							</button>
+						</div>
+					))}
 			</div>
 			<div style={{ flex: 3, overflow: 'auto' }}>
 				{
@@ -102,5 +101,6 @@ const App: React.FC = () => {
 			</div>
 		</div>
 	)
+
   };
 export default App;
