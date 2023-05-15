@@ -165,11 +165,11 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 	const computeFontSize = (frequency: number): number => {
 		const minFontSize = 25
-		const maxFontSize = 50
+		const maxFontSize = 45
 		return (
 			minFontSize +
 			((frequency - minFrequency) / (maxFrequency - minFrequency)) *
-				(maxFontSize - minFontSize)
+				(maxFontSize - minFontSize + 2)
 		)
 	}
 
@@ -180,7 +180,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	//   };
 
 	const alphabet = 'QWERTYUIOPASDFGHJKLZXCVBNM'.split('')
-	const numbers = '12345676890'.split('')
+	const numbers = '1234567890'.split('')
 	const pronouns = [
 		'I/me',
 		'you',
@@ -200,43 +200,8 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-			<div style={{ flex: 0.1, overflow: '', height: '100%' }}>
+			<div style={{ flex: .5, overflow: '', height: '100%' }}>
 				<div>
-					<div
-						style={{ marginTop: 'auto', marginBottom: 'auto', height: '3rem' }}>
-						{selectedWords.map((wordObj, i) => (
-							<>
-								<button
-									style={{
-										fontSize: '1rem',
-										alignSelf: 'center',
-										marginTop: 'auto',
-										marginBottom: 'auto',
-										padding: '10px 10px 10px 10px',
-										backgroundColor:
-											selectedPosition === i  ? 'lightpink' : 'white',
-									}}
-									onClick={selectedPosition !== i ? () => setSelectedPosition(i) : () => setSelectedPosition(null)}>
-									+
-								</button>
-								<button
-									key={i}
-									value={wordObj.text}
-									onClick={() => handleAddWord(wordObj.text)}
-									style={{
-										fontSize: '1rem',
-										alignSelf: 'center',
-										marginTop: 'auto',
-										marginBottom: 'auto',
-										padding: '10px',
-									}}>
-									{wordObj.tag
-										? `${wordObj.tag}: ${wordObj.text}`
-										: wordObj.text}
-								</button>
-							</>
-						))}
-					</div>
 					<div style={{ marginBottom: '1rem' }}>
 						<label style={{ margin: '1rem' }}>
 							<input
@@ -257,6 +222,57 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							Clear tag when applied
 						</label>
 					</div>
+					<div
+						style={{ marginTop: 'auto', marginBottom: '1rem', height: '5vh', overflowX: 'auto' }}>
+						{selectedWords.map((wordObj, i) => (
+							<>
+								<button
+									style={{
+										// fontSize: '1rem',
+										alignSelf: 'center',
+										marginTop: 'auto',
+										marginBottom: 'auto',
+										padding: '10px 10px 10px 10px',
+										backgroundColor:
+											selectedPosition === i ? 'dodgerblue' : 'lightslategrey',
+										color: 'white',
+										fontWeight: 'bold',
+										fontSize: '2vh',
+										opacity: selectedPosition === i ? '90%' : '80%',
+										// lineHeight: "100%",
+										// textAlign: "justify"
+									}}
+									onClick={
+										selectedPosition !== i
+											? () => setSelectedPosition(i)
+											: selectedLetters.length > 0
+											? () =>
+													handleAddWord(selectedLetters.join('').toLowerCase())
+											: () => setSelectedPosition(null)
+									}>
+									. . .
+								</button>
+								<button
+									key={i}
+									value={wordObj.text}
+									onClick={() => handleAddWord(wordObj.text)}
+									style={{
+										fontSize: '2vh',
+										alignSelf: 'center',
+										marginTop: 'auto',
+										marginBottom: 'auto',
+										padding: '10px',
+										backgroundColor: 'lightgray',
+										color: 'darkgreen',
+										fontWeight: 'bolder',
+									}}>
+									{wordObj.tag
+										? `${wordObj.tag}: ${wordObj.text}`
+										: wordObj.text}
+								</button>
+							</>
+						))}
+					</div>
 				</div>
 
 				<div>
@@ -264,7 +280,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						style={{
 							margin: '1px',
 							padding: '10px',
-							fontSize: 'calc(.7vw + 1vh)',
+							fontSize: '1rem',
 							backgroundColor: 'lightyellow',
 							color: 'darkyellow',
 							width: '30%',
@@ -276,7 +292,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 					<button
 						style={{
 							backgroundColor: 'wheat',
-							fontSize: 'calc(.7vw + 1vh)',
+							fontSize: '1rem',
 							padding: '10px',
 							color: 'darkyellow',
 							width: '30%',
@@ -290,7 +306,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						style={{
 							backgroundColor: 'green',
 							color: 'white',
-							fontSize: 'calc(.7vw + 1vh)',
+							fontSize: '1rem',
 							padding: '10px',
 							fontWeight: 'bolder',
 							width: '30%',
@@ -305,24 +321,29 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 				<div></div>
 			</div>
-			<div style={{ flex: 1.5, overflow: '', margin: '1vw' }}>
+			<div style={{ flex: 1, overflow: '', margin: '' }}>
 				<div></div>
-				<div>
+				<div
+					style={{
+						backgroundColor: '',
+						paddingTop: '1vh',
+						paddingBottom: '1vh',
+					}}>
 					{numbers.map((number) => (
 						<>
 							<button
 								key={number}
 								onClick={() => handleLetterClick(number)}
 								style={{
-									width: 'calc(8vw)',
-									paddingLeft: 'calc(.7vw)',
-									paddingRight: 'calc(.7vw)',
-									fontSize: 'calc(1vw + 1vh)',
+									width: 'calc(8.5vw)',
+									// paddingLeft: 'calc(.7vw)',
+									// paddingRight: 'calc(.7vw)',
+									fontSize: 'calc(1.3rem)',
 									padding: 'calc(1vh)',
 									borderRadius: '20%',
-									color: 'darkgreen',
-									fontWeight: 'bolder',
-									backgroundColor: 'lightgreen',
+									color: 'darkblue',
+									// fontWeight: 'bolder',
+									backgroundColor: 'lightpink',
 								}}>
 								{number}
 							</button>
@@ -331,11 +352,11 @@ const WordCloud: React.FC<WordCloudProps> = ({
 					))}
 					<button
 						style={{
-							width: 'calc(8vw)',
-							paddingLeft: 'calc(0vw)',
-							// textAlign: "center",
-							paddingRight: 'calc(0vw)',
-							fontSize: 'calc(1vw + 1vh)',
+							width: 'calc(8.5vw)',
+							// paddingLeft: 'calc(0vw)',
+							// // textAlign: "center",
+							// paddingRight: 'calc(0vw)',
+							fontSize: 'calc(1.3rem)',
 							minHeight: 'calc(1vw + 1vh)',
 							// lineHeight: "calc(1vw + 1vh)",
 							padding: 'calc(1vh)',
@@ -356,14 +377,14 @@ const WordCloud: React.FC<WordCloudProps> = ({
 								onClick={() => handleLetterClick(letter)}
 								style={{
 									width: 'calc(9vw)',
-									paddingLeft: 'calc(.7vw)',
-									paddingRight: 'calc(.7vw)',
-									fontSize: 'calc(1vw + 1vh)',
+									// paddingLeft: 'calc(.7vw)',
+									// paddingRight: 'calc(.7vw)',
+									fontSize: 'calc(1.3rem)',
 									padding: 'calc(1.5vh)',
 									borderRadius: '20%',
 									backgroundColor: 'lightblue',
 									color: 'darkblue',
-									height: '120%',
+									fontWeight: 'bolder',
 								}}>
 								{letter}
 							</button>
@@ -372,7 +393,27 @@ const WordCloud: React.FC<WordCloudProps> = ({
 									<br></br>
 								</>
 							)}
-							{letter === 'L' && <br></br>}
+							{letter === 'L' && (
+								<>
+									<button
+										onClick={() => handleAddWord('!')}
+										style={{
+											width: 'calc(9vw)',
+											// paddingLeft: 'calc(.7vw)',
+											// paddingRight: 'calc(.7vw)',
+											fontSize: 'calc(1.3rem)',
+											padding: 'calc(1.5vh)',
+											borderRadius: '20%',
+											backgroundColor: 'pink',
+											color: 'darkblue',
+											height: '120%',
+											justifySelf: 'end',
+										}}>
+										{'!'}
+									</button>
+									<br></br>
+								</>
+							)}
 						</>
 					))}
 					<button
@@ -381,7 +422,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							width: 'calc(9vw)',
 							paddingLeft: 'calc(.7vw)',
 							paddingRight: 'calc(.7vw)',
-							fontSize: 'calc(1vw + 1vh)',
+							fontSize: 'calc(1.3rem)',
 							padding: 'calc(1.5vh)',
 							borderRadius: '20%',
 							backgroundColor: 'pink',
@@ -427,6 +468,19 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						onClick={handleAddSelectedLetters}>
 						Add Word
 					</button> */}
+				</div>
+				<div></div>
+			</div>
+			<div
+				style={{
+					flex: 2,
+					overflow: 'auto',
+					margin: '0vw',
+					background: 'lightgreen',
+					borderRadius: '4%',
+					borderTop: '3px solid darkgreen',
+				}}>
+				<div style={{ filter: `drop-shadow(0 5px 3px forestgreen)` }}>
 					{pronouns.map((letter, i) => (
 						<>
 							<button
@@ -437,29 +491,21 @@ const WordCloud: React.FC<WordCloudProps> = ({
 									paddingLeft: 'calc(.7vw)',
 									paddingRight: 'calc(.7vw)',
 
-									fontSize: '80%',
+									fontSize: 'calc(.8vw + .8vh)',
 									fontWeight: 'bold',
 									padding: 'calc(.8vh)',
 									marginTop: i < 6 ? '1rem' : '0rem',
 									borderRadius: i < 6 ? '10% 10% 0% 0%' : '0 0 10% 10%',
 									backgroundColor: i > 6 ? 'lightgrey' : 'white',
 									color: 'black',
-									height: '100%',
+									// height: '100%',
 								}}>
 								{letter}
 							</button>
 						</>
 					))}
 				</div>
-				<div></div>
-			</div>
-			<div
-				style={{
-					flex: 2,
-					overflow: 'auto',
-					margin: '0vw',
-					background: 'lightgreen',
-				}}>
+				<br></br>
 				<div
 					onClick={() => handleAddWord(selectedLetters.join('').toLowerCase())}
 					className={styles.word}
@@ -477,7 +523,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						display: 'inline-block',
 						paddingBottom: '20px',
 						height: 'auto',
-						filter: `drop-shadow(0 90px 90px grey)`,
+						filter: `drop-shadow(0 10px 4px forestgreen)`,
 					}}>
 					{selectedLetters.join('').toLowerCase()}
 				</div>
@@ -495,21 +541,28 @@ const WordCloud: React.FC<WordCloudProps> = ({
 								// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
 								backgroundColor: 'lightgrey',
 								borderRadius: '20%',
-								padding: '5px 10px',
-								margin: '1vh',
+								padding: '1vh 1vw',
+								margin: '.8vh',
 								alignContent: 'center',
 								color: 'black',
 								display: 'inline-block',
-								paddingTop: '20px',
-								paddingBottom: '20px',
+								// paddingTop: '20px',
+								// paddingBottom: '20px',
 								height: 'auto',
 								filter: `drop-shadow(0 ${
-									computeFontSize(word.frequency) / 2
-								}px ${computeFontSize(word.frequency) / 4}px grey)`,
+									computeFontSize(word.frequency) / 3
+								}px ${computeFontSize(word.frequency) / 9}px forestgreen)`,
 								// marginTop: `-${
 								// 	computeFontSize(word.frequency)
 								// /10}px`
 								// , marginBottom: "10px"
+								opacity: computeFontSize(word.frequency) / 18,
+								border:
+									computeFontSize(word.frequency) > 30
+										? `${
+												computeFontSize(word.frequency) / 25
+										  }px groove darkgreen`
+										: '',
 							}}>
 							{word.text}
 						</div>
