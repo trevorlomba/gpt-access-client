@@ -25,7 +25,8 @@ const App: React.FC = () => {
 				formData.append('animal', animal + ' ' + selectedWordsString)
 
 				const response = await axios.post(
-					'https://gpt-access-server.herokuapp.com/generate-response',
+					'http://127.0.0.1:5000/generate-response',
+					// 'https://gpt-access-server.herokuapp.com/generate-response',
 					formData,
 					{
 						headers: {
@@ -63,15 +64,18 @@ const App: React.FC = () => {
 					flexDirection: 'column',
 					justifyContent: 'space-around',
 					margin: 'auto',
+					// backgroundColor: "lightgreen"
 				}}>
+				<div style={{backgroundColor: ""}}>
+					
 				{result &&
 					result.map((item, index) => (
 						<div
-							key={index}
-							style={{
-								fontWeight: 'bold',
-								color: 'darkolivegreen',
-							}}>
+						key={index}
+						style={{
+							fontWeight: 'bold',
+							color: 'darkolivegreen',
+						}}>
 							<button
 								style={{
 									fontSize: 'calc(1vw + 1vh)',
@@ -88,11 +92,12 @@ const App: React.FC = () => {
 							</button>
 						</div>
 					))}
+				</div>
 			</div>
 			<div style={{ flex: 5, overflow: 'auto' }}>
 				{
 					<WordCloud
-						selectedWords={selectedWords}
+					selectedWords={selectedWords}
 						setSelectedWords={setSelectedWords}
 						handleSubmit={handleSubmit}
 						playTTS={playTTS}

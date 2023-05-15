@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import wordsData from '../data/words2.json'
+import namesData from '../data/names.json'
 import styles from '../styles/WordCloud.module.css'
+import { FaExchangeAlt } from 'react-icons/fa'
 
 interface WordCloudProps {
 	selectedWords: { text: string; tag?: string }[]
@@ -22,6 +24,10 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	const [currentTag, setCurrentTag] = useState<string | undefined>(undefined)
 	const [clearTagOnApply, setClearTagOnApply] = useState(true)
 	const [selectedPosition, setSelectedPosition] = useState<number | null>(null)
+	const [selectedSwapPosition, setSelectedSwapPosition] = useState<
+		number | null
+	>(null)
+	const [category, setCategory] = React.useState(false)
 
 	const handleRemoveWord = (val: string) => {
 		//  if selected position is null,
@@ -39,9 +45,49 @@ const WordCloud: React.FC<WordCloudProps> = ({
 		// // setSelectedWords(newWords)
 	}
 
+	const handleSwap = (val: string) => {
+		console.log('swapping')
+		if (selectedSwapPosition !== null) {
+			let newWords = [...selectedWords]
+			const currentIndex = newWords.findIndex((wordObj) => wordObj.text === val)
+			if (currentIndex !== -1) {
+				let temp = newWords[currentIndex]
+				newWords[currentIndex] = newWords[selectedSwapPosition]
+				newWords[selectedSwapPosition] = temp
+				setSelectedWords(newWords)
+				setSelectedPosition(null)
+				setSelectedSwapPosition(null)
+			} else {
+				console.log('else')
+				newWords[selectedSwapPosition] = { text: val, tag: currentTag }
+				setSelectedWords(newWords)
+				setSelectedPosition(null)
+				setSelectedSwapPosition(null)
+			}
+		}
+	}
+
 	const handleAddWord = (val: string) => {
 		// Find the index of the wordObj in selectedWords
 		const index = selectedWords.findIndex((wordObj) => wordObj.text === val)
+
+		// If a position is selected for swapping
+		if (selectedSwapPosition !== null) {
+			handleSwap(val)
+
+			if (clearLettersOnWordSelect) {
+				setSelectedLetters([])
+			}
+
+			if (clearTagOnApply) {
+				console.log('clearTag')
+				setCurrentTag('')
+			}
+
+			// Reset selected position after word is added
+			setSelectedPosition(null)
+			return
+		}
 
 		// If the wordObj is found in selectedWords
 		if (index !== -1) {
@@ -63,22 +109,24 @@ const WordCloud: React.FC<WordCloudProps> = ({
 					selectedWords.map((word, i) => (i === index ? wordObj : word))
 				)
 			} else if (selectedPosition !== null) {
-    // Find current position of word
-    const currentPosition = selectedWords.findIndex((word) => word.text === val);
-    
-    // Copy the words array
-    const newWords = [...selectedWords];
-    
-    // Remove word at current position
-    if (currentPosition !== -1) {
-        newWords.splice(currentPosition, 1);
-    }
+				// Find current position of word
+				const currentPosition = selectedWords.findIndex(
+					(word) => word.text === val
+				)
 
-    // Insert word at selected position
-    newWords.splice(selectedPosition, 0, { text: val, tag: currentTag });
+				// Copy the words array
+				const newWords = [...selectedWords]
 
-    setSelectedWords(newWords);
-} else {
+				// Remove word at current position
+				if (currentPosition !== -1) {
+					newWords.splice(currentPosition, 1)
+				}
+
+				// Insert word at selected position
+				newWords.splice(selectedPosition, 0, { text: val, tag: currentTag })
+
+				setSelectedWords(newWords)
+			} else {
 				setSelectedWords(
 					selectedWords.filter((wordObj) => wordObj.text !== val)
 				)
@@ -114,6 +162,10 @@ const WordCloud: React.FC<WordCloudProps> = ({
 		setSelectedLetters([])
 	}
 
+	const handleCategoryToggle = () => {
+		setCategory(!category)
+	}
+
 	const handleTagClick = (tag: string) => {
 		if (currentTag === tag) {
 			setCurrentTag('')
@@ -146,22 +198,35 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	// 	}
 	// 	setSelectedLetters([])
 	// }
+	console.log('wordsData:', wordsData)
 
-	const visibleWords = wordsData
-		.filter(
-			(word) =>
+	const availableWords = category ? wordsData : namesData
+
+	const visibleWords = availableWords
+		.filter((word) => {
+			const condition =
 				selectedLetters.length === 0 ||
-				word.text.startsWith(selectedLetters.join('').toLowerCase())
-		)
-		.filter(
-			(word) =>
-				!selectedWords.some((selectedWord) => selectedWord.text === word.text)
-		) // filter out already selected words
+				word.text
+					.toLowerCase()
+					.startsWith(selectedLetters.join('').toLowerCase())
+			return condition
+		})
+		.filter((word) => {
+			const condition = !selectedWords.some(
+				(selectedWord) => selectedWord.text === word.text
+			)
+			return condition
+		}) // filter out already selected words
 		.sort((a, b) => b.frequency - a.frequency) // Sort by frequency in descending order
 		.slice(0, 30) // Keep only the top 30 words
 
+	console.log('Visible words:', visibleWords)
+
 	const minFrequency = Math.min(...visibleWords.map((word) => word.frequency))
 	const maxFrequency = Math.max(...visibleWords.map((word) => word.frequency))
+
+	console.log('Min frequency:', minFrequency)
+	console.log('Max frequency:', maxFrequency)
 
 	const computeFontSize = (frequency: number): number => {
 		const minFontSize = 25
@@ -172,6 +237,14 @@ const WordCloud: React.FC<WordCloudProps> = ({
 				(maxFontSize - minFontSize + 2)
 		)
 	}
+
+	console.log(
+		'Computed font size for each visible word:',
+		visibleWords.map((word) => ({
+			word: word.text,
+			fontSize: computeFontSize(word.frequency),
+		}))
+	)
 
 	const tags = ['subject', 'object', 'adverb']
 
@@ -206,39 +279,78 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						style={{
 							marginTop: '.5rem',
 							marginBottom: '1rem',
-							height: '5vh',
+							height: '7vh',
 							overflowX: 'auto',
 						}}>
 						{selectedWords.map((wordObj, i) => (
-							<span>
+							<span
+								style={{
+									borderBottom:
+										i === selectedPosition || i === selectedSwapPosition
+											? '.5vw solid dodgerblue'
+											: '',
+									display: 'inline-flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}>
 								<button
 									style={{
-										// fontSize: '1rem',
 										alignSelf: 'center',
 										marginTop: 'auto',
 										marginBottom: 'auto',
 										padding: '10px 10px 10px 10px',
 										backgroundColor:
-											selectedPosition === i ? 'dodgerblue' : 'lightslategrey',
-										color: 'white',
+											selectedPosition === i ? 'dodgerblue' : 'white',
+										color: selectedPosition === i ? 'white' : 'forestgreen',
 										fontWeight: 'bold',
 										fontSize: '2vh',
-										opacity: selectedPosition === i ? '90%' : '80%',
+										opacity: selectedPosition === i ? '100%' : '750%',
 										borderTop: '2px solid grey',
 										borderBottom: '2px solid grey',
 										borderLeft: '1px solid grey',
-										// lineHeight: "100%",
-										// textAlign: "justify"
 									}}
-									onClick={
-										selectedPosition !== i
-											? () => setSelectedPosition(i)
-											: selectedLetters.length > 0
-											? () =>
-													handleAddWord(selectedLetters.join('').toLowerCase())
-											: () => setSelectedPosition(null)
-									}>
-									. . .
+									onClick={() => {
+										if (selectedPosition !== i) {
+											setSelectedSwapPosition(null)
+											setSelectedPosition(i)
+										} else if (selectedLetters.length > 0) {
+											handleAddWord(selectedLetters.join('').toLowerCase())
+										} else {
+											setSelectedPosition(null)
+										}
+									}}>
+									...
+								</button>
+								<button
+									onClick={() => {
+										if (selectedSwapPosition !== i) {
+											setSelectedPosition(null)
+											setSelectedSwapPosition(i)
+										} else if (selectedLetters.length > 0) {
+											handleAddWord(selectedLetters.join('').toLowerCase())
+										} else {
+											setSelectedSwapPosition(null)
+										}
+									}}
+									style={{
+										// display: 'block',
+										alignSelf: 'center',
+										marginTop: 'auto',
+										marginBottom: 'auto',
+										padding: '10px 10px 10px 10px',
+										fontSize: '2vh',
+										color: 'white',
+										fontWeight: 'bold',
+										backgroundColor:
+											selectedSwapPosition === i
+												? 'dodgerblue'
+												: 'darkslategray',
+										opacity: selectedPosition === i ? '100%' : '75%',
+										borderTop: '2px solid grey',
+										borderBottom: '2px solid grey',
+										borderLeft: '1px solid grey',
+									}}>
+									<FaExchangeAlt />
 								</button>
 								<button
 									key={i}
@@ -422,7 +534,47 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						}}>
 						{'?'}
 					</button>
+
 					<br></br>
+					<button
+						onClick={handleCategoryToggle}
+						style={{
+							width: 'calc(12vw)',
+							fontSize: 'calc(1rem)',
+							padding: 'calc(1.5vh)',
+							borderRadius: '20%',
+							backgroundColor: category ? 'lightgrey' : 'lightgrey', // Changes color based on category state
+							color: 'darkgreen',
+							position: 'absolute',
+							left: '1vw',
+							transform: 'translateY(-1.3rem)',
+							// bottom: "1vh",
+							fontWeight: 'bolder',
+						}}>
+						{category ? 'Names' : 'Words'}
+					</button>
+					<button
+						onClick={() =>
+							selectedLetters.length > 0
+								? handleAddWord(selectedLetters.join('').toLowerCase())
+								: ''
+						}
+						style={{
+							width: 'calc(12vw)',
+							fontSize: 'calc(1rem)',
+							padding: 'calc(1.5vh)',
+							borderRadius: '20%',
+							backgroundColor: 'green',
+							// Changes color based on category state
+							color: 'white',
+							position: 'absolute',
+							right: '1vw',
+							transform: 'translateY(-1.3rem)',
+							// bottom: "1vh",
+							fontWeight: 'bolder',
+						}}>
+						Add Word
+					</button>
 					{/* <br></br>
 					{tags.map((tag) => (
 						<button
