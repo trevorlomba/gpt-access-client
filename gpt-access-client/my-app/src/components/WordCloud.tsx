@@ -200,32 +200,17 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-			<div style={{ flex: .5, overflow: '', height: '100%' }}>
+			<div style={{ flex: 0.5, overflow: '', height: '100%' }}>
 				<div>
-					<div style={{ marginBottom: '1rem' }}>
-						<label style={{ margin: '1rem' }}>
-							<input
-								type='checkbox'
-								checked={clearLettersOnWordSelect}
-								onChange={() =>
-									setClearLettersOnWordSelect(!clearLettersOnWordSelect)
-								}
-							/>
-							Clear letters when a word is chosen
-						</label>
-						<label style={{ margin: '1rem' }}>
-							<input
-								type='checkbox'
-								checked={clearTagOnApply}
-								onChange={() => setClearTagOnApply(!clearTagOnApply)}
-							/>
-							Clear tag when applied
-						</label>
-					</div>
 					<div
-						style={{ marginTop: 'auto', marginBottom: '1rem', height: '5vh', overflowX: 'auto' }}>
+						style={{
+							marginTop: '.5rem',
+							marginBottom: '1rem',
+							height: '5vh',
+							overflowX: 'auto',
+						}}>
 						{selectedWords.map((wordObj, i) => (
-							<>
+							<span>
 								<button
 									style={{
 										// fontSize: '1rem',
@@ -239,6 +224,9 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										fontWeight: 'bold',
 										fontSize: '2vh',
 										opacity: selectedPosition === i ? '90%' : '80%',
+										borderTop: '2px solid grey',
+										borderBottom: '2px solid grey',
+										borderLeft: '1px solid grey',
 										// lineHeight: "100%",
 										// textAlign: "justify"
 									}}
@@ -265,12 +253,15 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										backgroundColor: 'lightgray',
 										color: 'darkgreen',
 										fontWeight: 'bolder',
+										borderTop: '2px solid grey',
+										borderBottom: '2px solid black',
+										borderRight: '1px solid grey',
 									}}>
 									{wordObj.tag
 										? `${wordObj.tag}: ${wordObj.text}`
 										: wordObj.text}
 								</button>
-							</>
+							</span>
 						))}
 					</div>
 				</div>
@@ -470,17 +461,44 @@ const WordCloud: React.FC<WordCloudProps> = ({
 					</button> */}
 				</div>
 				<div></div>
+				<div style={{ margin: '.5rem' }}>
+					<label style={{ margin: '1rem' }}>
+						<input
+							type='checkbox'
+							checked={clearLettersOnWordSelect}
+							onChange={() =>
+								setClearLettersOnWordSelect(!clearLettersOnWordSelect)
+							}
+						/>
+						Clear letters when a word is chosen
+					</label>
+					<label style={{ margin: '1rem' }}>
+						<input
+							type='checkbox'
+							checked={clearTagOnApply}
+							onChange={() => setClearTagOnApply(!clearTagOnApply)}
+						/>
+						Clear tag when applied
+					</label>
+				</div>
 			</div>
 			<div
 				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'space-evenly',
 					flex: 2,
 					overflow: 'auto',
-					margin: '0vw',
+					margin: 'auto',
 					background: 'lightgreen',
 					borderRadius: '4%',
 					borderTop: '3px solid darkgreen',
 				}}>
-				<div style={{ filter: `drop-shadow(0 5px 3px forestgreen)` }}>
+				<div
+					style={{
+						filter: `drop-shadow(0 5px 3px forestgreen)`,
+						justifyContent: 'flex-end',
+					}}>
 					{pronouns.map((letter, i) => (
 						<>
 							<button
@@ -506,67 +524,73 @@ const WordCloud: React.FC<WordCloudProps> = ({
 					))}
 				</div>
 				<br></br>
-				<div
-					onClick={() => handleAddWord(selectedLetters.join('').toLowerCase())}
-					className={styles.word}
-					style={{
-						fontSize: `calc(calc(45vh + 45vw)/20)`,
-						// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
-						backgroundColor: 'lightcoral',
-						borderRadius: '20%',
-						padding: '5px 10px',
-						paddingTop: '0',
-						margin: '5px',
-						marginTop: 'auto',
-						alignContent: 'center',
-						color: 'black',
-						display: 'inline-block',
-						paddingBottom: '20px',
-						height: 'auto',
-						filter: `drop-shadow(0 10px 4px forestgreen)`,
-					}}>
-					{selectedLetters.join('').toLowerCase()}
-				</div>
-				{visibleWords
-					.sort((a, b) => a.text.localeCompare(b.text))
-					.map((word) => (
+				<div>
+					<div style={{ marginBottom: '1vh' }}>
 						<div
-							key={word.id}
-							onClick={() => handleAddWord(word.text)}
+							onClick={() =>
+								handleAddWord(selectedLetters.join('').toLowerCase())
+							}
 							className={styles.word}
 							style={{
-								fontSize: `calc(calc(${computeFontSize(
-									word.frequency
-								)}vh + (${computeFontSize(word.frequency)}vw))/30)`,
+								fontSize: `2rem`,
 								// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
-								backgroundColor: 'lightgrey',
+								backgroundColor: 'lightcoral',
 								borderRadius: '20%',
-								padding: '1vh 1vw',
-								margin: '.8vh',
+								padding: '5px 10px',
+								margin: '5px',
+								marginTop: 'auto',
 								alignContent: 'center',
 								color: 'black',
 								display: 'inline-block',
-								// paddingTop: '20px',
 								// paddingBottom: '20px',
 								height: 'auto',
-								filter: `drop-shadow(0 ${
-									computeFontSize(word.frequency) / 3
-								}px ${computeFontSize(word.frequency) / 9}px forestgreen)`,
-								// marginTop: `-${
-								// 	computeFontSize(word.frequency)
-								// /10}px`
-								// , marginBottom: "10px"
-								opacity: computeFontSize(word.frequency) / 18,
-								border:
-									computeFontSize(word.frequency) > 30
-										? `${
-												computeFontSize(word.frequency) / 25
-										  }px groove darkgreen`
-										: '',
+								filter: `drop-shadow(0 10px 4px forestgreen)`,
+								border: '1.5px solid firebrick',
 							}}>
-							{word.text}
+							{selectedLetters.join('').toLowerCase()}
 						</div>
-					))}
+						{visibleWords
+							.sort((a, b) => a.text.localeCompare(b.text))
+							.map((word) => (
+								<div
+									key={word.id}
+									onClick={() => handleAddWord(word.text)}
+									className={styles.word}
+									style={{
+										fontSize: `calc(calc(${computeFontSize(
+											word.frequency
+										)}vh + (${computeFontSize(word.frequency)}vw))/30)`,
+										// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
+										backgroundColor: 'lightgrey',
+										borderRadius: '20%',
+										padding: '1vh 1vw',
+										margin: '.8vh',
+										alignContent: 'center',
+										color: 'black',
+										display: 'inline-block',
+										// paddingTop: '20px',
+										// paddingBottom: '20px',
+										height: 'auto',
+										filter: `drop-shadow(0 ${
+											computeFontSize(word.frequency) / 3
+										}px ${computeFontSize(word.frequency) / 9}px forestgreen)`,
+										// marginTop: `-${
+										// 	computeFontSize(word.frequency)
+										// /10}px`
+										// , marginBottom: "10px"
+										opacity: computeFontSize(word.frequency) / 18,
+										border:
+											computeFontSize(word.frequency) > 30
+												? `${
+														computeFontSize(word.frequency) / 25
+												  }px groove darkgreen`
+												: '',
+									}}>
+									{word.text}
+								</div>
+							))}
+					</div>
+				</div>
 			</div>
 		</div>
 	)

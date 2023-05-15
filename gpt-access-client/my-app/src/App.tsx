@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		setResult([]) // Clear the previous results
-		for (let i = 0; i < 1; i++) {
+		for (let i = 0; i < 3; i++) {
 			try {
 				const formData = new URLSearchParams()
 
@@ -54,10 +54,10 @@ const App: React.FC = () => {
   return (
 		<div
 			className='App'
-			style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+			style={{ display: 'flex', flexDirection: 'column', height: '100vh', margin: ""}}>
 			<div
 				style={{
-					flex: 0.7,
+					flex: 1,
 					overflow: 'auto',
 					display: 'flex',
 					flexDirection: 'column',
@@ -89,7 +89,7 @@ const App: React.FC = () => {
 						</div>
 					))}
 			</div>
-			<div style={{ flex: 3, overflow: 'auto' }}>
+			<div style={{ flex: 5, overflow: 'auto' }}>
 				{
 					<WordCloud
 						selectedWords={selectedWords}
