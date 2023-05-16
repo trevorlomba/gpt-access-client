@@ -429,5 +429,509 @@
         "text": "Logan",
         "category": "EN",
         "frequency": 29.98861
-    }
+    }, 
+    {
+        "id": 73,
+        "text": "Alexander",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 74,
+        "text": "Sophia",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 75,
+        "text": "Benjamin",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 76,
+        "text": "Avery",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 77,
+        "text": "Jackson",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 78,
+        "text": "Chloe",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 79,
+        "text": "Elijah",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 80,
+        "text": "Scarlett",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 81,
+        "text": "Henry",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 82,
+        "text": "Lily",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 83,
+        "text": "Owen",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 84,
+        "text": "Aria",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 85,
+        "text": "Gabriel",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 86,
+        "text": "Zoe",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 87,
+        "text": "Matthew",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 88,
+        "text": "Evelyn",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 89,
+        "text": "Daniel",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 90,
+        "text": "Samuel",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 91,
+        "text": "Avery",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 92,
+        "text": "Ella",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 93,
+        "text": "William",
+        "category": "EN",
+        "frequency": 29.98861
+    }, 
+    {
+        "id": 94,
+        "text": "Amelia",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 95,
+        "text": "Daniel",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 96,
+        "text": "Elijah",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 97,
+        "text": "Layla",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 98,
+        "text": "Henry",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 99,
+        "text": "Grace",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 100,
+        "text": "Carter",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 101,
+        "text": "Scarlett",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 102,
+        "text": "Owen",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 103,
+        "text": "Aria",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 104,
+        "text": "Gabriel",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 105,
+        "text": "Zoe",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 106,
+        "text": "Matthew",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 107,
+        "text": "Evelyn",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 108,
+        "text": "Logan",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 109,
+        "text": "Ella",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 110,
+        "text": "William",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 111,
+        "text": "Amelia",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 112,
+        "text": "Daniel",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 113,
+        "text": "Elijah",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 114,
+        "text": "Layla",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 115,
+        "text": "Henry",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 116,
+        "text": "Elizabeth",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 117,
+        "text": "Mason",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 118,
+        "text": "Avery",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 119,
+        "text": "Mila",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 120,
+        "text": "Eli",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 121,
+        "text": "Victoria",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 122,
+        "text": "Sebastian",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 123,
+        "text": "Aria",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 124,
+        "text": "Leo",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 125,
+        "text": "Stella",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 126,
+        "text": "Benjamin",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 127,
+        "text": "Nora",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 128,
+        "text": "Liam",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 129,
+        "text": "Elena",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 130,
+        "text": "Samuel",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 131,
+        "text": "Chloe",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 132,
+        "text": "Evan",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 133,
+        "text": "Hannah",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 134,
+        "text": "Jack",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {
+        "id": 135,
+        "text": "Penelope",
+        "category": "EN",
+        "frequency": 29.98861
+    },
+    {"id": 136,
+    "text": "Wyatt",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 137,
+    "text": "Sofia",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 138,
+    "text": "Lucas",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 139,
+    "text": "Harper",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 140,
+    "text": "Jackson",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 141,
+    "text": "Aurora",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 142,
+    "text": "Alexander",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 143,
+    "text": "Violet",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 144,
+    "text": "Mason",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 145,
+    "text": "Eleanor",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 146,
+    "text": "Caleb",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 147,
+    "text": "Luna",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 148,
+    "text": "Jacob",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 149,
+    "text": "Paisley",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 150,
+    "text": "Christopher",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 151,
+    "text": "Bella",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 152,
+    "text": "Oliver",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 153,
+    "text": "Ariana",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 154,
+    "text": "Nathan",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 155,
+    "text": "Savannah",
+    "category": "EN",
+    "frequency": 29.98861
+},
+{
+    "id": 156,
+    "text": "Daniel",
+    "category": "EN",
+    "frequency": 29.98861
+}
+
 ]

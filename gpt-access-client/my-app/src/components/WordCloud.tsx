@@ -27,7 +27,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	const [selectedSwapPosition, setSelectedSwapPosition] = useState<
 		number | null
 	>(null)
-	const [category, setCategory] = React.useState(false)
+	const [category, setCategory] = React.useState(true)
 
 	const handleRemoveWord = (val: string) => {
 		//  if selected position is null,
