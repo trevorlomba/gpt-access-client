@@ -25,8 +25,8 @@ const App: React.FC = () => {
 				formData.append('animal', animal + ' ' + selectedWordsString)
 
 				const response = await axios.post(
-					'http://127.0.0.1:5000/generate-response',
-					// 'https://gpt-access-server.herokuapp.com/generate-response',
+					// 'http://127.0.0.1:5000/generate-response',
+					'https://gpt-access-server.herokuapp.com/generate-response',
 					formData,
 					{
 						headers: {

@@ -283,12 +283,11 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							overflowX: 'auto',
 						}}>
 						{selectedWords.map((wordObj, i) => (
-							<span
+							<><span
 								style={{
-									borderBottom:
-										i === selectedPosition || i === selectedSwapPosition
-											? '.5vw solid dodgerblue'
-											: '',
+									borderBottom: i === selectedPosition || i === selectedSwapPosition
+										? '.5vw solid dodgerblue'
+										: '',
 									display: 'inline-flex',
 									alignItems: 'center',
 									justifyContent: 'center',
@@ -299,8 +298,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										marginTop: 'auto',
 										marginBottom: 'auto',
 										padding: '10px 10px 10px 10px',
-										backgroundColor:
-											selectedPosition === i ? 'dodgerblue' : 'white',
+										backgroundColor: selectedPosition === i ? 'dodgerblue' : 'white',
 										color: selectedPosition === i ? 'white' : 'forestgreen',
 										fontWeight: 'bold',
 										fontSize: '2vh',
@@ -318,7 +316,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										} else {
 											setSelectedPosition(null)
 										}
-									}}>
+									} }>
 									...
 								</button>
 								<button
@@ -331,7 +329,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										} else {
 											setSelectedSwapPosition(null)
 										}
-									}}
+									} }
 									style={{
 										// display: 'block',
 										alignSelf: 'center',
@@ -341,10 +339,9 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										fontSize: '2vh',
 										color: 'white',
 										fontWeight: 'bold',
-										backgroundColor:
-											selectedSwapPosition === i
-												? 'dodgerblue'
-												: 'darkslategray',
+										backgroundColor: selectedSwapPosition === i
+											? 'dodgerblue'
+											: 'darkslategray',
 										opacity: selectedPosition === i ? '100%' : '75%',
 										borderTop: '2px solid grey',
 										borderBottom: '2px solid grey',
@@ -372,8 +369,35 @@ const WordCloud: React.FC<WordCloudProps> = ({
 									{wordObj.tag
 										? `${wordObj.tag}: ${wordObj.text}`
 										: wordObj.text}
-								</button>
-							</span>
+								</button></span><span>
+									{selectedWords.length - 1 === i ? <button
+										style={{
+											alignSelf: 'center',
+											marginTop: 'auto',
+											marginBottom: 'auto',
+											padding: '10px 10px 10px 10px',
+											backgroundColor: selectedPosition === i + 1 ? 'dodgerblue' : 'white',
+											color: selectedPosition === i + 1 ? 'white' : 'forestgreen',
+											fontWeight: 'bold',
+											fontSize: '2vh',
+											opacity: selectedPosition === i ? '100%' : '750%',
+											borderTop: '2px solid grey',
+											borderBottom: '2px solid grey',
+											borderLeft: '1px solid grey',
+										}}
+										onClick={() => {
+											if (selectedPosition !== i) {
+												setSelectedSwapPosition(null)
+												setSelectedPosition(i + 1)
+											} else if (selectedLetters.length > 0) {
+												handleAddWord(selectedLetters.join('').toLowerCase())
+											} else {
+												setSelectedPosition(null)
+											}
+										} }>
+										...
+									</button> : <></>}
+								</span></>
 						))}
 					</div>
 				</div>
