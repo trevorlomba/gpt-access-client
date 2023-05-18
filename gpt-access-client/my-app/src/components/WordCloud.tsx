@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import wordsData from '../data/words2.json'
 import namesData from '../data/names.json'
 import styles from '../styles/WordCloud.module.css'
@@ -271,6 +271,34 @@ const WordCloud: React.FC<WordCloudProps> = ({
 		'its',
 	]
 
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			// Check if key is alphanumeric
+			if (/^[a-zA-Z0-9]+$/.test(event.key)) {
+				setSelectedLetters((prevLetters) => [...prevLetters, event.key])
+			}
+
+			// Check if key is "Enter"
+			if (event.key === 'Enter') {
+				handleAddWord(selectedLetters.join(''))
+				setSelectedLetters([])
+			}
+
+			// Check if key is "Backspace"
+			if (event.key === 'Backspace') {
+				setSelectedLetters(selectedLetters.slice(0, -1))
+			}
+		}
+
+		// Attach event listener
+		window.addEventListener('keydown', handleKeyDown)
+
+		// Cleanup function to remove the listener when the component unmounts
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [selectedLetters, handleAddWord]) // Depend on selectedLetters and handleAddWord
+
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
 			<div style={{ flex: 0.5, overflow: '', height: '100%' }}>
@@ -283,101 +311,26 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							overflowX: 'auto',
 						}}>
 						{selectedWords.map((wordObj, i) => (
-							<><span
-								style={{
-									borderBottom: i === selectedPosition || i === selectedSwapPosition
-										? '.5vw solid dodgerblue'
-										: '',
-									display: 'inline-flex',
-									alignItems: 'center',
-									justifyContent: 'center',
-								}}>
-								<button
+							<>
+								<span
 									style={{
-										alignSelf: 'center',
-										marginTop: 'auto',
-										marginBottom: 'auto',
-										padding: '10px 10px 10px 10px',
-										backgroundColor: selectedPosition === i ? 'dodgerblue' : 'white',
-										color: selectedPosition === i ? 'white' : 'forestgreen',
-										fontWeight: 'bold',
-										fontSize: '2vh',
-										opacity: selectedPosition === i ? '100%' : '750%',
-										borderTop: '2px solid grey',
-										borderBottom: '2px solid grey',
-										borderLeft: '1px solid grey',
-									}}
-									onClick={() => {
-										if (selectedPosition !== i) {
-											setSelectedSwapPosition(null)
-											setSelectedPosition(i)
-										} else if (selectedLetters.length > 0) {
-											handleAddWord(selectedLetters.join('').toLowerCase())
-										} else {
-											setSelectedPosition(null)
-										}
-									} }>
-									...
-								</button>
-								<button
-									onClick={() => {
-										if (selectedSwapPosition !== i) {
-											setSelectedPosition(null)
-											setSelectedSwapPosition(i)
-										} else if (selectedLetters.length > 0) {
-											handleAddWord(selectedLetters.join('').toLowerCase())
-										} else {
-											setSelectedSwapPosition(null)
-										}
-									} }
-									style={{
-										// display: 'block',
-										alignSelf: 'center',
-										marginTop: 'auto',
-										marginBottom: 'auto',
-										padding: '10px 10px 10px 10px',
-										fontSize: '2vh',
-										color: 'white',
-										fontWeight: 'bold',
-										backgroundColor: selectedSwapPosition === i
-											? 'dodgerblue'
-											: 'darkslategray',
-										opacity: selectedPosition === i ? '100%' : '75%',
-										borderTop: '2px solid grey',
-										borderBottom: '2px solid grey',
-										borderLeft: '1px solid grey',
+										borderBottom:
+											i === selectedPosition || i === selectedSwapPosition
+												? '.5vw solid dodgerblue'
+												: '',
+										display: 'inline-flex',
+										alignItems: 'center',
+										justifyContent: 'center',
 									}}>
-									<FaExchangeAlt />
-								</button>
-								<button
-									key={i}
-									value={wordObj.text}
-									onClick={() => handleAddWord(wordObj.text)}
-									style={{
-										fontSize: '2vh',
-										alignSelf: 'center',
-										marginTop: 'auto',
-										marginBottom: 'auto',
-										padding: '10px',
-										backgroundColor: 'lightgray',
-										color: 'darkgreen',
-										fontWeight: 'bolder',
-										borderTop: '2px solid grey',
-										borderBottom: '2px solid black',
-										borderRight: '1px solid grey',
-									}}>
-									{wordObj.tag
-										? `${wordObj.tag}: ${wordObj.text}`
-										: wordObj.text}
-								</button></span><span>
-									{selectedWords.length - 1 === i ? <button
+									<button
 										style={{
 											alignSelf: 'center',
 											marginTop: 'auto',
 											marginBottom: 'auto',
 											padding: '10px 10px 10px 10px',
-											backgroundColor: selectedPosition === i + 1 ? 'dodgerblue' : 'white',
-											color: selectedPosition === i + 1 ? 'white' : 'forestgreen',
+											backgroundColor:
+												selectedPosition === i ? 'dodgerblue' : 'white',
+											color: selectedPosition === i ? 'white' : 'forestgreen',
 											fontWeight: 'bold',
 											fontSize: '2vh',
 											opacity: selectedPosition === i ? '100%' : '750%',
@@ -388,16 +341,104 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										onClick={() => {
 											if (selectedPosition !== i) {
 												setSelectedSwapPosition(null)
-												setSelectedPosition(i + 1)
+												setSelectedPosition(i)
 											} else if (selectedLetters.length > 0) {
 												handleAddWord(selectedLetters.join('').toLowerCase())
 											} else {
 												setSelectedPosition(null)
 											}
-										} }>
+										}}>
 										...
-									</button> : <></>}
-								</span></>
+									</button>
+									<button
+										onClick={() => {
+											if (selectedSwapPosition !== i) {
+												setSelectedPosition(null)
+												setSelectedSwapPosition(i)
+											} else if (selectedLetters.length > 0) {
+												handleAddWord(selectedLetters.join('').toLowerCase())
+											} else {
+												setSelectedSwapPosition(null)
+											}
+										}}
+										style={{
+											// display: 'block',
+											alignSelf: 'center',
+											marginTop: 'auto',
+											marginBottom: 'auto',
+											padding: '10px 10px 10px 10px',
+											fontSize: '2vh',
+											color: 'white',
+											fontWeight: 'bold',
+											backgroundColor:
+												selectedSwapPosition === i
+													? 'dodgerblue'
+													: 'darkslategray',
+											opacity: selectedPosition === i ? '100%' : '75%',
+											borderTop: '2px solid grey',
+											borderBottom: '2px solid grey',
+											borderLeft: '1px solid grey',
+										}}>
+										<FaExchangeAlt />
+									</button>
+									<button
+										key={i}
+										value={wordObj.text}
+										onClick={() => handleAddWord(wordObj.text)}
+										style={{
+											fontSize: '2vh',
+											alignSelf: 'center',
+											marginTop: 'auto',
+											marginBottom: 'auto',
+											padding: '10px',
+											backgroundColor: 'lightgray',
+											color: 'darkgreen',
+											fontWeight: 'bolder',
+											borderTop: '2px solid grey',
+											borderBottom: '2px solid black',
+											borderRight: '1px solid grey',
+										}}>
+										{wordObj.tag
+											? `${wordObj.tag}: ${wordObj.text}`
+											: wordObj.text}
+									</button>
+								</span>
+								<span>
+									{selectedWords.length - 1 === i ? (
+										<button
+											style={{
+												alignSelf: 'center',
+												marginTop: 'auto',
+												marginBottom: 'auto',
+												padding: '10px 10px 10px 10px',
+												backgroundColor:
+													selectedPosition === i + 1 ? 'dodgerblue' : 'white',
+												color:
+													selectedPosition === i + 1 ? 'white' : 'forestgreen',
+												fontWeight: 'bold',
+												fontSize: '2vh',
+												opacity: selectedPosition === i ? '100%' : '750%',
+												borderTop: '2px solid grey',
+												borderBottom: '2px solid grey',
+												borderLeft: '1px solid grey',
+											}}
+											onClick={() => {
+												if (selectedPosition !== i) {
+													setSelectedSwapPosition(null)
+													setSelectedPosition(i + 1)
+												} else if (selectedLetters.length > 0) {
+													handleAddWord(selectedLetters.join('').toLowerCase())
+												} else {
+													setSelectedPosition(null)
+												}
+											}}>
+											...
+										</button>
+									) : (
+										<></>
+									)}
+								</span>
+							</>
 						))}
 					</div>
 				</div>
@@ -560,102 +601,73 @@ const WordCloud: React.FC<WordCloudProps> = ({
 					</button>
 
 					<br></br>
-					<button
-						onClick={handleCategoryToggle}
+					<div
 						style={{
-							width: 'calc(12vw)',
-							fontSize: 'calc(1rem)',
-							padding: 'calc(1.5vh)',
-							borderRadius: '20%',
-							backgroundColor: category ? 'lightgrey' : 'lightgrey', // Changes color based on category state
-							color: 'darkgreen',
-							position: 'absolute',
-							left: '1vw',
-							transform: 'translateY(-1.3rem)',
-							// bottom: "1vh",
-							fontWeight: 'bolder',
+							display: 'flex',
+							justifyContent: 'space-around',
+							alignItems: 'center',
+							flexWrap: 'wrap',
+							margin: '.5rem',
+							maxWidth: '',
 						}}>
-						{category ? 'Names' : 'Words'}
-					</button>
-					<button
-						onClick={() =>
-							selectedLetters.length > 0
-								? handleAddWord(selectedLetters.join('').toLowerCase())
-								: ''
-						}
-						style={{
-							width: 'calc(12vw)',
-							fontSize: 'calc(1rem)',
-							padding: 'calc(1.5vh)',
-							borderRadius: '20%',
-							backgroundColor: 'green',
-							// Changes color based on category state
-							color: 'white',
-							position: 'absolute',
-							right: '1vw',
-							transform: 'translateY(-1.3rem)',
-							// bottom: "1vh",
-							fontWeight: 'bolder',
-						}}>
-						Add Word
-					</button>
-					{/* <br></br>
-					{tags.map((tag) => (
 						<button
-							key={tag}
-							onClick={() => handleTagClick(tag)}
+							onClick={handleCategoryToggle}
 							style={{
-								width: `calc(85vw/${tags.length + 1})`,
-								paddingLeft: 'calc(.7vw)',
-								paddingRight: 'calc(.7vw)',
-								fontSize: '110%',
-								padding: 'calc(1vh)',
-								marginBottom: '.5rem',
-								borderRadius: '10%',
-								color: currentTag === tag ? 'darkred' : 'darkred',
-								fontWeight: '',
-								backgroundColor: currentTag === tag ? 'pink' : 'lightgrey',
+								width: 'calc(12vw)',
+								fontSize: 'calc(1rem)',
+								padding: 'calc(1.5vh)',
+								borderRadius: '20%',
+								backgroundColor: category ? 'lightgrey' : 'lightgrey',
+								color: 'darkgreen',
+								fontWeight: 'bolder',
 							}}>
-							{tag}
+							{category ? 'Names' : 'Words'}
 						</button>
-					))}{' '}
-					<button
-						style={{
-							margin: '1px',
-							width: `calc(85vw/(calc(${tags.length + 1})))`,
-							padding: 'calc(1vh)',
-							borderRadius: '10%',
-							fontWeight: 'bolder',
-							paddingLeft: 'calc(.7vw)',
-							paddingRight: 'calc(.7vw)',
-							fontSize: '110%',
-							backgroundColor: 'cornflowerblue',
-							color: 'whitesmoke',
-						}}
-						onClick={handleAddSelectedLetters}>
-						Add Word
-					</button> */}
-				</div>
-				<div></div>
-				<div style={{ margin: '.5rem' }}>
-					<label style={{ margin: '1rem' }}>
-						<input
-							type='checkbox'
-							checked={clearLettersOnWordSelect}
-							onChange={() =>
-								setClearLettersOnWordSelect(!clearLettersOnWordSelect)
+
+						<div
+							style={{
+								margin: '1rem',
+								maxWidth: '40vw',
+								display: 'inline-block',
+							}}>
+							<label style={{ margin: '1rem' }}>
+								<input
+									type='checkbox'
+									checked={clearLettersOnWordSelect}
+									onChange={() =>
+										setClearLettersOnWordSelect(!clearLettersOnWordSelect)
+									}
+								/>
+								Clear letters when a word is chosen
+							</label>
+							<label style={{ margin: '1rem' }}>
+								<input
+									type='checkbox'
+									checked={clearTagOnApply}
+									onChange={() => setClearTagOnApply(!clearTagOnApply)}
+								/>
+								Clear tag when applied
+							</label>
+						</div>
+
+						<button
+							onClick={() =>
+								selectedLetters.length > 0
+									? handleAddWord(selectedLetters.join('').toLowerCase())
+									: ''
 							}
-						/>
-						Clear letters when a word is chosen
-					</label>
-					<label style={{ margin: '1rem' }}>
-						<input
-							type='checkbox'
-							checked={clearTagOnApply}
-							onChange={() => setClearTagOnApply(!clearTagOnApply)}
-						/>
-						Clear tag when applied
-					</label>
+							style={{
+								width: 'calc(12vw)',
+								fontSize: 'calc(1rem)',
+								padding: 'calc(1.5vh)',
+								borderRadius: '20%',
+								backgroundColor: 'green',
+								color: 'white',
+								fontWeight: 'bolder',
+							}}>
+							Add Word
+						</button>
+					</div>
 				</div>
 			</div>
 			<div
