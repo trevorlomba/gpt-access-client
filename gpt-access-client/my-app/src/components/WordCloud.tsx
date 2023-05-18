@@ -630,7 +630,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 								maxWidth: '40vw',
 								display: 'inline-block',
 							}}>
-							<label style={{ margin: '1rem' }}>
+							<label style={{ margin: '1rem', whiteSpace: 'nowrap' }}>
 								<input
 									type='checkbox'
 									checked={clearLettersOnWordSelect}
@@ -639,8 +639,8 @@ const WordCloud: React.FC<WordCloudProps> = ({
 									}
 								/>
 								Clear letters when a word is chosen
-							</label>
-							<label style={{ margin: '1rem' }}>
+							</label><br></br>
+							<label style={{whiteSpace: 'nowrap', margin: 'auto' }}>
 								<input
 									type='checkbox'
 									checked={clearTagOnApply}
