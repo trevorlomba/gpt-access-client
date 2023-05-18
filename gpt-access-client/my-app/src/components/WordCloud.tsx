@@ -28,6 +28,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 		number | null
 	>(null)
 	const [category, setCategory] = React.useState(true)
+	const [showKeyboard, setShowKeyboard] = useState(true)
 
 	const handleRemoveWord = (val: string) => {
 		//  if selected position is null,
@@ -218,7 +219,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 			return condition
 		}) // filter out already selected words
 		.sort((a, b) => b.frequency - a.frequency) // Sort by frequency in descending order
-		.slice(0, 30) // Keep only the top 30 words
+		.slice(0, showKeyboard ? 30 : 50) // Keep only the top 30 words
 
 	console.log('Visible words:', visibleWords)
 
@@ -273,11 +274,6 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
-			// Check if key is alphanumeric
-			if (/^[a-zA-Z0-9]+$/.test(event.key)) {
-				setSelectedLetters((prevLetters) => [...prevLetters, event.key])
-			}
-
 			// Check if key is "Enter"
 			if (event.key === 'Enter') {
 				handleAddWord(selectedLetters.join(''))
@@ -285,8 +281,13 @@ const WordCloud: React.FC<WordCloudProps> = ({
 			}
 
 			// Check if key is "Backspace"
-			if (event.key === 'Backspace') {
-				setSelectedLetters(selectedLetters.slice(0, -1))
+			else if (event.key === 'Backspace') {
+				setSelectedLetters((prevLetters) => prevLetters.slice(0, -1))
+			}
+
+			// Check if key is alphanumeric
+			else if (/^[a-zA-Z0-9]$/.test(event.key)) {
+				setSelectedLetters((prevLetters) => [...prevLetters, event.key])
 			}
 		}
 
@@ -449,9 +450,27 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							margin: '1px',
 							padding: '10px',
 							fontSize: '1rem',
+							backgroundColor: showKeyboard ? 'lightgrey' : 'darkblue',
+							color: showKeyboard ? 'darkblue' : 'lightgrey',
+							opacity: showKeyboard ? '100%' : '75%',
+							width : '15%',
+							fontWeight: 'bolder',
+						}}
+						onClick={() => setShowKeyboard(!showKeyboard)}>
+						<span style={{ whiteSpace: 'nowrap' }}>
+							{showKeyboard ? 'Keyboard -' : 'Keyboard +'}
+						</span>
+					</button>
+
+					<button
+						style={{
+							margin: '1px',
+							padding: '10px',
+							fontSize: '1rem',
 							backgroundColor: 'lightyellow',
 							color: 'darkyellow',
-							width: '30%',
+							whiteSpace: 'nowrap',
+							width: '25%',
 							fontWeight: 'bolder',
 						}}
 						onClick={() => setSelectedLetters([])}>
@@ -463,7 +482,8 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							fontSize: '1rem',
 							padding: '10px',
 							color: 'darkyellow',
-							width: '30%',
+							whiteSpace: 'nowrap',
+							width: '25%',
 							// maxHeight: '5%',
 							fontWeight: 'bolder',
 						}}
@@ -476,8 +496,9 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							color: 'white',
 							fontSize: '1rem',
 							padding: '10px',
+							whiteSpace: 'nowrap',
 							fontWeight: 'bolder',
-							width: '30%',
+							width: '25%',
 						}}
 						onClick={() => {
 							const words = selectedWords.map((word) => word.text).join(' ')
@@ -489,203 +510,197 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 				<div></div>
 			</div>
-			<div style={{ flex: 1, overflow: '', margin: '' }}>
+			<div style={{ flex: showKeyboard ? 1 : 0, overflow: '', margin: '' }}>
 				<div></div>
-				<div
-					style={{
-						backgroundColor: '',
-						paddingTop: '1vh',
-						paddingBottom: '1vh',
-					}}>
-					{numbers.map((number) => (
-						<>
-							<button
-								key={number}
-								onClick={() => handleLetterClick(number)}
-								style={{
-									width: 'calc(8.5vw)',
-									// paddingLeft: 'calc(.7vw)',
-									// paddingRight: 'calc(.7vw)',
-									fontSize: 'calc(1.3rem)',
-									padding: 'calc(1vh)',
-									borderRadius: '20%',
-									color: 'darkblue',
-									// fontWeight: 'bolder',
-									backgroundColor: 'lightpink',
-								}}>
-								{number}
-							</button>
-							{/* {number === '0' && <br></br>} */}
-						</>
-					))}
-					<button
-						style={{
-							width: 'calc(8.5vw)',
-							// paddingLeft: 'calc(0vw)',
-							// // textAlign: "center",
-							// paddingRight: 'calc(0vw)',
-							fontSize: 'calc(1.3rem)',
-							minHeight: 'calc(1vw + 1vh)',
-							// lineHeight: "calc(1vw + 1vh)",
-							padding: 'calc(1vh)',
-							alignSelf: 'center',
-							borderRadius: '20%',
-							color: 'white',
-							fontWeight: 'bolder',
-							backgroundColor: 'firebrick',
-						}}
-						onClick={() => setSelectedLetters(selectedLetters.slice(0, -1))}>
-						DEL
-					</button>
-					<br></br>
-					{alphabet.map((letter) => (
-						<>
-							<button
-								key={letter}
-								onClick={() => handleLetterClick(letter)}
-								style={{
-									width: 'calc(9vw)',
-									// paddingLeft: 'calc(.7vw)',
-									// paddingRight: 'calc(.7vw)',
-									fontSize: 'calc(1.3rem)',
-									padding: 'calc(1.5vh)',
-									borderRadius: '20%',
-									backgroundColor: 'lightblue',
-									color: 'darkblue',
-									fontWeight: 'bolder',
-								}}>
-								{letter}
-							</button>
-							{letter === 'P' && (
-								<>
-									<br></br>
-								</>
-							)}
-							{letter === 'L' && (
-								<>
-									<button
-										onClick={() => handleAddWord('!')}
-										style={{
-											width: 'calc(9vw)',
-											// paddingLeft: 'calc(.7vw)',
-											// paddingRight: 'calc(.7vw)',
-											fontSize: 'calc(1.3rem)',
-											padding: 'calc(1.5vh)',
-											borderRadius: '20%',
-											backgroundColor: 'pink',
-											color: 'darkblue',
-											height: '120%',
-											justifySelf: 'end',
-										}}>
-										{'!'}
-									</button>
-									<br></br>
-								</>
-							)}
-						</>
-					))}
-					<button
-						onClick={() => handleAddWord('?')}
-						style={{
-							width: 'calc(9vw)',
-							paddingLeft: 'calc(.7vw)',
-							paddingRight: 'calc(.7vw)',
-							fontSize: 'calc(1.3rem)',
-							padding: 'calc(1.5vh)',
-							borderRadius: '20%',
-							backgroundColor: 'pink',
-							color: 'darkblue',
-							height: '120%',
-						}}>
-						{'?'}
-					</button>
-
-					<br></br>
+				{showKeyboard && (
 					<div
 						style={{
-							display: 'flex',
-							justifyContent: 'space-around',
-							alignItems: 'center',
-							flexWrap: 'wrap',
-							margin: '.5rem',
-							maxWidth: '',
+							backgroundColor: '',
+							paddingTop: '1vh',
+							paddingBottom: '1vh',
 						}}>
+						{numbers.map((number) => (
+							<>
+								<button
+									key={number}
+									onClick={() => handleLetterClick(number)}
+									style={{
+										width: 'calc(8.5vw)',
+										// paddingLeft: 'calc(.7vw)',
+										// paddingRight: 'calc(.7vw)',
+										fontSize: 'calc(1.3rem)',
+										padding: 'calc(1vh)',
+										borderRadius: '20%',
+										color: 'darkblue',
+										// fontWeight: 'bolder',
+										backgroundColor: 'lightpink',
+									}}>
+									{number}
+								</button>
+								{/* {number === '0' && <br></br>} */}
+							</>
+						))}
 						<button
-							onClick={handleCategoryToggle}
 							style={{
-								width: 'calc(12vw)',
-								fontSize: 'calc(1rem)',
-								padding: 'calc(1.5vh)',
+								width: 'calc(8.5vw)',
+								// paddingLeft: 'calc(0vw)',
+								// // textAlign: "center",
+								// paddingRight: 'calc(0vw)',
+								fontSize: 'calc(1.3rem)',
+								minHeight: 'calc(1vw + 1vh)',
+								// lineHeight: "calc(1vw + 1vh)",
+								padding: 'calc(1vh)',
+								alignSelf: 'center',
 								borderRadius: '20%',
-								backgroundColor: category ? 'lightgrey' : 'lightgrey',
-								color: 'darkgreen',
-								fontWeight: 'bolder',
-							}}>
-							{category ? 'Names' : 'Words'}
-						</button>
-
-						<div
-							style={{
-								margin: '1rem',
-								maxWidth: '40vw',
-								display: 'inline-block',
-							}}>
-							<label style={{ margin: '1rem', whiteSpace: 'nowrap' }}>
-								<input
-									type='checkbox'
-									checked={clearLettersOnWordSelect}
-									onChange={() =>
-										setClearLettersOnWordSelect(!clearLettersOnWordSelect)
-									}
-								/>
-								Clear letters when a word is chosen
-							</label><br></br>
-							<label style={{whiteSpace: 'nowrap', margin: 'auto' }}>
-								<input
-									type='checkbox'
-									checked={clearTagOnApply}
-									onChange={() => setClearTagOnApply(!clearTagOnApply)}
-								/>
-								Clear tag when applied
-							</label>
-						</div>
-
-						<button
-							onClick={() =>
-								selectedLetters.length > 0
-									? handleAddWord(selectedLetters.join('').toLowerCase())
-									: ''
-							}
-							style={{
-								width: 'calc(12vw)',
-								fontSize: 'calc(1rem)',
-								padding: 'calc(1.5vh)',
-								borderRadius: '20%',
-								backgroundColor: 'green',
 								color: 'white',
 								fontWeight: 'bolder',
+								backgroundColor: 'firebrick',
+							}}
+							onClick={() => setSelectedLetters(selectedLetters.slice(0, -1))}>
+							DEL
+						</button>
+						<br></br>
+						{alphabet.map((letter) => (
+							<>
+								<button
+									key={letter}
+									onClick={() => handleLetterClick(letter)}
+									style={{
+										width: 'calc(9vw)',
+										// paddingLeft: 'calc(.7vw)',
+										// paddingRight: 'calc(.7vw)',
+										fontSize: 'calc(1.3rem)',
+										padding: 'calc(1.5vh)',
+										borderRadius: '20%',
+										backgroundColor: 'lightblue',
+										color: 'darkblue',
+										fontWeight: 'bolder',
+									}}>
+									{letter}
+								</button>
+								{letter === 'P' && (
+									<>
+										<br></br>
+									</>
+								)}
+								{letter === 'L' && (
+									<>
+										<button
+											onClick={() => handleAddWord('!')}
+											style={{
+												width: 'calc(9vw)',
+												// paddingLeft: 'calc(.7vw)',
+												// paddingRight: 'calc(.7vw)',
+												fontSize: 'calc(1.3rem)',
+												padding: 'calc(1.5vh)',
+												borderRadius: '20%',
+												backgroundColor: 'pink',
+												color: 'darkblue',
+												height: '120%',
+												justifySelf: 'end',
+											}}>
+											{'!'}
+										</button>
+										<br></br>
+									</>
+								)}
+							</>
+						))}
+						<button
+							onClick={() => handleAddWord('?')}
+							style={{
+								width: 'calc(9vw)',
+								paddingLeft: 'calc(.7vw)',
+								paddingRight: 'calc(.7vw)',
+								fontSize: 'calc(1.3rem)',
+								padding: 'calc(1.5vh)',
+								borderRadius: '20%',
+								backgroundColor: 'pink',
+								color: 'darkblue',
+								height: '120%',
 							}}>
-							Add Word
+							{'?'}
 						</button>
 					</div>
-				</div>
+				)}
 			</div>
+			<br></br>
 			<div
 				style={{
 					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'space-evenly',
-					flex: 2,
-					overflow: 'auto',
-					margin: 'auto',
-					background: 'lightgreen',
-					borderRadius: '4%',
-					borderTop: '3px solid darkgreen',
+					justifyContent: 'space-around',
+					alignItems: 'center',
+					flexWrap: 'wrap',
+					margin: '.5rem',
+					maxWidth: '',
 				}}>
+				<button
+					onClick={handleCategoryToggle}
+					style={{
+						width: 'calc(12vw)',
+						fontSize: 'calc(1rem)',
+						padding: 'calc(1.5vh)',
+						borderRadius: '20%',
+						backgroundColor: category ? 'lightgrey' : 'lightgrey',
+						color: 'darkgreen',
+						fontWeight: 'bolder',
+					}}>
+					{category ? 'Names' : 'Words'}
+				</button>
+
 				<div
 					style={{
-						filter: `drop-shadow(0 5px 3px forestgreen)`,
-						justifyContent: 'flex-end',
+						margin: '1vh',
+						maxWidth: '40vw',
+						display: 'inline-block',
+					}}>
+					<label style={{ margin: '1rem', whiteSpace: 'nowrap' }}>
+						<input
+							type='checkbox'
+							checked={clearLettersOnWordSelect}
+							onChange={() =>
+								setClearLettersOnWordSelect(!clearLettersOnWordSelect)
+							}
+						/>
+						Clear letters when a word is chosen
+					</label>
+					<br></br>
+					<label style={{ whiteSpace: 'nowrap', margin: 'auto' }}>
+						<input
+							type='checkbox'
+							checked={clearTagOnApply}
+							onChange={() => setClearTagOnApply(!clearTagOnApply)}
+						/>
+						Clear tag when applied
+					</label>
+				</div>
+
+				<button
+					onClick={() =>
+						selectedLetters.length > 0
+							? handleAddWord(selectedLetters.join('').toLowerCase())
+							: ''
+					}
+					style={{
+						width: 'calc(15vw)',
+						fontSize: 'calc(1rem)',
+						padding: 'calc(1.5vh)',
+						// marginRight: '-1.5vw',
+						borderRadius: '20%',
+						backgroundColor: 'green',
+						color: 'white',
+						fontWeight: 'bolder',
+					}}>
+					Add Word
+				</button>
+			</div>
+				<div
+					style={{
+						filter: `drop-shadow(0 5px 3px darkgrey)`,
+						// justifyContent: 'flex-end',
+						// display: 'flex',
+						marginBottom: '1vh',
+						marginTop: 0,
 					}}>
 					{pronouns.map((letter, i) => (
 						<>
@@ -696,7 +711,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 									width: `calc(95vw/${pronouns.length / 2})`,
 									paddingLeft: 'calc(.7vw)',
 									paddingRight: 'calc(.7vw)',
-
+	
 									fontSize: 'calc(.8vw + .8vh)',
 									fontWeight: 'bold',
 									padding: 'calc(.8vh)',
@@ -711,6 +726,18 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						</>
 					))}
 				</div>
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'space-evenly',
+					flex: 2,
+					overflow: 'auto',
+					margin: 'auto',
+					background: 'lightgreen',
+					borderRadius: '4%',
+					borderTop: '3px solid darkgreen',
+				}}>
 				<br></br>
 				<div>
 					<div style={{ marginBottom: '1vh' }}>
