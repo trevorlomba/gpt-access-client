@@ -29,6 +29,11 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	>(null)
 	const [category, setCategory] = React.useState(true)
 	const [showKeyboard, setShowKeyboard] = useState(true)
+	const [tabbedWord, setTabbedWord] = useState(0)
+	const [numberInput, setNumberInput] = useState('')
+	const [isNumberInputMode, setIsNumberInputMode] = useState(false)
+	const [requiresDot, setRequiresDot] = useState(true)
+
 
 	const handleRemoveWord = (val: string) => {
 		//  if selected position is null,
@@ -69,6 +74,26 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	}
 
 	const handleAddWord = (val: string) => {
+		// Checking if 'val' starts with '.' and the remaining characters form a valid integer or float
+		if (val.startsWith('.') && !isNaN(Number(val.substring(1)))) {
+			const num = Number(val.substring(1))
+
+			if (Number.isInteger(num)) {
+				// If the number is an integer and less than or equal to visibleWords length
+				if (num <= visibleWords.length) {
+					// Set the tabbedWord to this value
+					setTabbedWord(num)
+					return
+				}
+			} else {
+				// If the number is a float, add it as any other words
+				setSelectedWords([
+					...selectedWords,
+					{ text: num.toString(), tag: currentTag },
+				])
+				return
+			}
+		}
 		// Find the index of the wordObj in selectedWords
 		const index = selectedWords.findIndex((wordObj) => wordObj.text === val)
 
@@ -155,6 +180,8 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 		// Reset selected position after word is added
 		setSelectedPosition(null)
+		setTabbedWord(0)
+		setCategory(true)
 	}
 
 	const handleAddSelectedLetters = () => {
@@ -189,7 +216,18 @@ const WordCloud: React.FC<WordCloudProps> = ({
 	// }
 
 	const handleLetterClick = (letter: string) => {
-		setSelectedLetters([...selectedLetters, letter])
+		if (!requiresDot && /^[0-9]$/.test(letter)) {
+			
+			const newNumberInput = numberInput + letter
+			if (parseInt(newNumberInput) <= visibleWords.length) {
+				setNumberInput(newNumberInput)
+				setTabbedWord(parseInt(newNumberInput))
+			} else if (parseInt(letter) <= visibleWords.length) {
+				setNumberInput(letter)
+				setTabbedWord(parseInt(letter))
+			}
+		} else (
+		setSelectedLetters([...selectedLetters, letter]))
 	}
 
 	// const handleAddSelectedLetters = () => {
@@ -271,12 +309,59 @@ const WordCloud: React.FC<WordCloudProps> = ({
 		'their',
 		'its',
 	]
+	
 
-	useEffect(() => {
-		const handleKeyDown = (event: KeyboardEvent) => {
-			// Check if key is "Enter"
+useEffect(() => {
+	const handleKeyDown = (event: KeyboardEvent) => {
+		// Check if key is "."
+		if (event.key === '.') {
+			event.preventDefault()
+			setNumberInput('')
+			setRequiresDot(!requiresDot)
+		}
+
+		// Check if key is an integer and we're in number input mode
+		else if (!requiresDot && /^[0-9]$/.test(event.key)) {
+			event.preventDefault()
+			// Only add the digit if it doesn't make the number exceed visibleWords.length
+			const newNumberInput = numberInput + event.key
+			if (parseInt(newNumberInput) <= visibleWords.length) {
+				setNumberInput(newNumberInput)
+				setTabbedWord(parseInt(newNumberInput))
+			} else if (parseInt(event.key) <= visibleWords.length) {
+				setNumberInput(event.key)
+				setTabbedWord(parseInt(event.key))
+			}
+		}
+		// Check if key is "Enter" and we're in number input mode
+		else if (!requiresDot && event.key === 'Enter') {
+			event.preventDefault()
+			const selectedIndex = parseInt(numberInput)
+			if (!isNaN(selectedIndex)) {
+				handleAddWord(visibleWords[selectedIndex - 1].text)
+				setTabbedWord(0)
+			}
+			setIsNumberInputMode(false)
+			setNumberInput('')
+		}
+		// Check if key is "Escape" and we're in number input mode
+		else if (isNumberInputMode && event.key === 'Escape') {
+			event.preventDefault()
+			setIsNumberInputMode(false)
+			setNumberInput('')
+		} else if (event.key === 'Backspace') {
+			setNumberInput((prevNumberInput) => prevNumberInput.slice(0, -1))
+			setTabbedWord(parseInt(numberInput))
+		}
+
+		// If we are not in number input mode
+		else if (!isNumberInputMode) {
 			if (event.key === 'Enter') {
-				handleAddWord(selectedLetters.join(''))
+				const newWord =
+					tabbedWord === 0
+						? selectedLetters.join('')
+						: visibleWords[tabbedWord - 1].text
+				handleAddWord(newWord)
 				setSelectedLetters([])
 			}
 
@@ -289,16 +374,51 @@ const WordCloud: React.FC<WordCloudProps> = ({
 			else if (/^[a-zA-Z0-9]$/.test(event.key)) {
 				setSelectedLetters((prevLetters) => [...prevLetters, event.key])
 			}
-		}
 
-		// Attach event listener
-		window.addEventListener('keydown', handleKeyDown)
+			// Check if key is "Tab"
+			else if (event.key === 'Tab') {
+				// Prevent default browser action
+				event.preventDefault()
 
-		// Cleanup function to remove the listener when the component unmounts
-		return () => {
-			window.removeEventListener('keydown', handleKeyDown)
+				if (event.shiftKey) {
+					// "Shift" + "Tab" was pressed
+					setTabbedWord((prevTabbedWord) => {
+						let newTabbedWord = prevTabbedWord - 1
+						// check if we need to loop to the end of visibleWords
+						if (newTabbedWord < 0) newTabbedWord = visibleWords.length
+						return newTabbedWord
+					})
+				} else {
+					// "Tab" was pressed
+					setTabbedWord(
+						(prevTabbedWord) => (prevTabbedWord + 1) % (visibleWords.length + 1)
+					)
+				}
+			}
+
+			// Check if key is "Escape"
+			else if (event.key === 'Escape') {
+				setTabbedWord(0)
+			}
 		}
-	}, [selectedLetters, handleAddWord]) // Depend on selectedLetters and handleAddWord
+	}
+
+	// Attach event listener
+	window.addEventListener('keydown', handleKeyDown)
+
+	// Cleanup function to remove the listener when the component unmounts
+	return () => {
+		window.removeEventListener('keydown', handleKeyDown)
+	}
+}, [
+	selectedLetters,
+	handleAddWord,
+	tabbedWord,
+	visibleWords,
+	isNumberInputMode,
+	numberInput,
+])
+
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -311,8 +431,9 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							height: '7vh',
 							overflowX: 'auto',
 						}}>
+						{numberInput}
 						{selectedWords.map((wordObj, i) => (
-							<>
+							<span style={{border: "10px solid green"}}>
 								<span
 									style={{
 										borderBottom:
@@ -330,7 +451,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 											marginBottom: 'auto',
 											padding: '10px 10px 10px 10px',
 											backgroundColor:
-												selectedPosition === i ? 'dodgerblue' : 'white',
+												selectedPosition === i ? 'dodgerblue' : 'lightgrey',
 											color: selectedPosition === i ? 'white' : 'forestgreen',
 											fontWeight: 'bold',
 											fontSize: '2vh',
@@ -364,44 +485,44 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										}}
 										style={{
 											// display: 'block',
+											fontSize: '2vh',
 											alignSelf: 'center',
 											marginTop: 'auto',
 											marginBottom: 'auto',
-											padding: '10px 10px 10px 10px',
-											fontSize: '2vh',
-											color: 'white',
-											fontWeight: 'bold',
+											padding: '10px',
 											backgroundColor:
-												selectedSwapPosition === i
-													? 'dodgerblue'
-													: 'darkslategray',
-											opacity: selectedPosition === i ? '100%' : '75%',
+												selectedSwapPosition === i ? 'dodgerblue' : 'lightgrey',
+											color:
+												selectedSwapPosition === i ? 'white' : 'forestgreen',
+											fontWeight: 'bolder',
 											borderTop: '2px solid grey',
-											borderBottom: '2px solid grey',
-											borderLeft: '1px solid grey',
+											borderBottom: '2px solid black',
+											borderRight: '1px solid grey',
 										}}>
-										<FaExchangeAlt />
+										{wordObj.text}
 									</button>
 									<button
 										key={i}
 										value={wordObj.text}
 										onClick={() => handleAddWord(wordObj.text)}
 										style={{
-											fontSize: '2vh',
 											alignSelf: 'center',
 											marginTop: 'auto',
 											marginBottom: 'auto',
-											padding: '10px',
-											backgroundColor: 'lightgray',
-											color: 'darkgreen',
-											fontWeight: 'bolder',
+											padding: '10px 10px 10px 10px',
+											fontSize: '2vh',
+											color: 'firebrick',
+											fontWeight: '',
+											borderRight: '3px solid black',
+											// borderTop: '3px solid grey',
+											backgroundColor:
+												selectedSwapPosition === i ? 'lightgrey' : 'lightgrey',
+											opacity: selectedPosition === i ? '100%' : '75%',
 											borderTop: '2px solid grey',
-											borderBottom: '2px solid black',
-											borderRight: '1px solid grey',
+											borderBottom: '2px solid grey',
+											borderLeft: '1px solid grey',
 										}}>
-										{wordObj.tag
-											? `${wordObj.tag}: ${wordObj.text}`
-											: wordObj.text}
+										X
 									</button>
 								</span>
 								<span>
@@ -439,7 +560,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										<></>
 									)}
 								</span>
-							</>
+							</span>
 						))}
 					</div>
 				</div>
@@ -461,7 +582,6 @@ const WordCloud: React.FC<WordCloudProps> = ({
 							{showKeyboard ? 'Keyboard -' : 'Keyboard +'}
 						</span>
 					</button>
-
 					<button
 						style={{
 							margin: '1px',
@@ -512,54 +632,70 @@ const WordCloud: React.FC<WordCloudProps> = ({
 			</div>
 			<div style={{ flex: showKeyboard ? 1 : 0, overflow: '', margin: '' }}>
 				<div></div>
+				<br></br>
+				{numbers.map((number) => (
+					<>
+						<button
+							key={number}
+							onClick={() => handleLetterClick(number)}
+							style={{
+								width: 'calc(8vw)',
+								// paddingLeft: 'calc(.7vw)',
+								// paddingRight: 'calc(.7vw)',
+								fontSize: 'calc(1.3rem)',
+								padding: 'calc(1vh)',
+								borderRadius: '20%',
+								color: 'darkblue',
+								// fontWeight: 'bolder',
+								backgroundColor: 'lightpink',
+							}}>
+							{number}
+						</button>
+						{/* {number === '0' && <br></br>} */}
+					</>
+				))}
+				<button
+					style={{
+						width: 'calc(8vw)',
+						// paddingLeft: 'calc(.7vw)',
+						// paddingRight: 'calc(.7vw)',
+						fontSize: 'calc(1.3rem)',
+						padding: 'calc(1vh)',
+						borderRadius: '20%',
+						backgroundColor: requiresDot ? 'pink' : 'darkblue',
+						color: requiresDot ? 'darkblue' : 'lightgrey',
+						// height: '120%',
+						fontWeight: requiresDot ? '' : 'bold',
+					}}
+					onClick={() => setRequiresDot(!requiresDot)}>
+					{'*#*'}
+				</button>
+				<button
+					style={{
+						width: 'calc(8vw)',
+						// paddingLeft: 'calc(0vw)',
+						// // textAlign: "center",
+						// paddingRight: 'calc(0vw)',
+						fontSize: 'calc(1.3rem)',
+						minHeight: 'calc(1vw + 1vh)',
+						// lineHeight: "calc(1vw + 1vh)",
+						padding: 'calc(1vh)',
+						alignSelf: 'center',
+						borderRadius: '20%',
+						color: 'white',
+						fontWeight: 'bolder',
+						backgroundColor: 'firebrick',
+					}}
+					onClick={() => setSelectedLetters(selectedLetters.slice(0, -1))}>
+					DEL
+				</button>
 				{showKeyboard && (
 					<div
 						style={{
 							backgroundColor: '',
-							paddingTop: '1vh',
+							// paddingTop: '1vh',
 							paddingBottom: '1vh',
 						}}>
-						{numbers.map((number) => (
-							<>
-								<button
-									key={number}
-									onClick={() => handleLetterClick(number)}
-									style={{
-										width: 'calc(8.5vw)',
-										// paddingLeft: 'calc(.7vw)',
-										// paddingRight: 'calc(.7vw)',
-										fontSize: 'calc(1.3rem)',
-										padding: 'calc(1vh)',
-										borderRadius: '20%',
-										color: 'darkblue',
-										// fontWeight: 'bolder',
-										backgroundColor: 'lightpink',
-									}}>
-									{number}
-								</button>
-								{/* {number === '0' && <br></br>} */}
-							</>
-						))}
-						<button
-							style={{
-								width: 'calc(8.5vw)',
-								// paddingLeft: 'calc(0vw)',
-								// // textAlign: "center",
-								// paddingRight: 'calc(0vw)',
-								fontSize: 'calc(1.3rem)',
-								minHeight: 'calc(1vw + 1vh)',
-								// lineHeight: "calc(1vw + 1vh)",
-								padding: 'calc(1vh)',
-								alignSelf: 'center',
-								borderRadius: '20%',
-								color: 'white',
-								fontWeight: 'bolder',
-								backgroundColor: 'firebrick',
-							}}
-							onClick={() => setSelectedLetters(selectedLetters.slice(0, -1))}>
-							DEL
-						</button>
-						<br></br>
 						{alphabet.map((letter) => (
 							<>
 								<button
@@ -641,11 +777,11 @@ const WordCloud: React.FC<WordCloudProps> = ({
 						fontSize: 'calc(1rem)',
 						padding: 'calc(1.5vh)',
 						borderRadius: '20%',
-						backgroundColor: category ? 'lightgrey' : 'lightgrey',
-						color: 'darkgreen',
+						backgroundColor: category ? 'lightgrey' : 'darkblue',
+						color: category ? 'darkgreen' : 'lightgrey',
 						fontWeight: 'bolder',
 					}}>
-					{category ? 'Names' : 'Words'}
+					{category ? 'Names' : 'Names'}
 				</button>
 
 				<div
@@ -677,9 +813,11 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
 				<button
 					onClick={() =>
-						selectedLetters.length > 0
-							? handleAddWord(selectedLetters.join('').toLowerCase())
-							: ''
+						handleAddWord(
+							tabbedWord === 0
+								? selectedLetters.join('')
+								: visibleWords[tabbedWord - 1].text
+						)
 					}
 					style={{
 						width: 'calc(15vw)',
@@ -763,13 +901,23 @@ const WordCloud: React.FC<WordCloudProps> = ({
 								// paddingBottom: '20px',
 								height: 'auto',
 								filter: `drop-shadow(0 10px 4px forestgreen)`,
-								border: '1.5px solid firebrick',
+								border:
+									tabbedWord === 0
+										? `.5vw solid fireBrick`
+										: '.1vw solid fireBrick',
 							}}>
+							<span
+								style={{
+									fontSize: '1.1rem',
+									fontWeight: 'bold',
+									color: 'fireBrick',
+									opacity: '60%',
+								}}>{`${0} `}</span>
 							{selectedLetters.join('').toLowerCase()}
 						</div>
 						{visibleWords
 							.sort((a, b) => a.text.localeCompare(b.text))
-							.map((word) => (
+							.map((word, i) => (
 								<div
 									key={word.id}
 									onClick={() => handleAddWord(word.text)}
@@ -777,7 +925,9 @@ const WordCloud: React.FC<WordCloudProps> = ({
 									style={{
 										fontSize: `calc((${computeFontSize(
 											word.frequency
-										)}vh/35 + (${computeFontSize(word.frequency)}vw)/35) - ${word.text.length / 35}vw)`,
+										)}vh/35 + (${computeFontSize(word.frequency)}vw)/35) - ${
+											word.text.length / 35
+										}vw)`,
 										// border: `${(computeFontSize(word.frequency)/15)}px solid darkgrey`,
 										backgroundColor: 'lightgrey',
 										borderRadius: '20%',
@@ -801,13 +951,27 @@ const WordCloud: React.FC<WordCloudProps> = ({
 										// , marginBottom: "10px"
 										opacity: computeFontSize(word.frequency) / 18,
 										border:
-											computeFontSize(word.frequency) > 30
+											tabbedWord === i + 1
+												? `.5vw solid fireBrick`
+												: computeFontSize(word.frequency) > 20
 												? `${
 														computeFontSize(word.frequency) / 25
-												  }px groove darkgreen`
+												  }px solid darkgreen`
 												: '',
 									}}>
-									{word.text}
+									<span
+										style={{
+											fontSize: '1.1rem',
+											fontWeight: '',
+											color: tabbedWord === i + 1 ? 'fireBrick' : 'black',
+											opacity: tabbedWord === i + 1 ? '80%' : '20%',
+										}}>{`${i + 1}|  `}</span>
+									<span
+										style={{
+											color: 'black',
+										}}>
+										{word.text}
+									</span>
 								</div>
 							))}
 					</div>
